@@ -4,7 +4,7 @@
   "description": "Transform design tokens from tokens-studio into tailwind classes",
   "main": "dist/test/index.js",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@gsuiffet"
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "dist"
