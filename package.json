@@ -1,0 +1,34 @@
+{
+  "name": "@gsuiffet/tokens-studio-tailwind",
+  "version": "0.0.1",
+  "description": "Transform design tokens from tokens-studio into tailwind classes",
+  "main": "dist/test/index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@gsuiffet"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "npm",
+    "nestjs",
+    "nest-packages"
+  ],
+  "author": "Guillaume Suiffet",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "^9.0.5",
+    "@nestjs/mapped-types": "^2.0.2",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.3",
+    "rimraf": "^5.0.0",
+    "typescript": "^4.9.5"
+  }
+}

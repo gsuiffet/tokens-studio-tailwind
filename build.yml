@@ -1,0 +1,23 @@
+name: tokens-studio-tailwind
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout to repository
+        uses: actions/checkout@v2
+      - name: install and build
+        run: npm ci --save-dev typescript
+      - name: publish to registry
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@gsuiffet'
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.My_Secret}}
