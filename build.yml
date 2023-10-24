@@ -8,19 +8,19 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout to repository
+      - name: checkout
         uses: actions/checkout@v4.1.1
-      - name: install and build
-        run: npm ci --save-dev typescript
-      - name: publish to registry
-        uses: actions/setup-node@v2
+      - name: node
+        uses: actions/setup-node@v4.0.0
         with:
-          node-version: 16
+          node-version: 18
           registry-url: 'https://registry.npmjs.org'
           scope: '@gsuiffet'
+      - name: install and build
+        run: npm ci --save-dev typescript
       - name: publish
         run: npm publish --access public
-        # npm publish --access public
-
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        # npm publish --access public
+
