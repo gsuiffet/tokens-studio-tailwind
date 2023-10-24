@@ -16,8 +16,10 @@ jobs:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
           scope: '@gsuiffet'
-      - name: install and build
-        run: npm ci --save-dev typescript
+      - name: install
+        run: npm ci
+      - name: build
+        run : npm run build
       - name: publish
         run: npm publish --access public
         env:
