@@ -1,23 +1,25 @@
-name: notification-system
+name: tokens-studio-tailwind
 
 on:
   push:
     branches:
       - main
 jobs:
-  buld-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout to repository
-        uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v4.1.1
+      - name: node
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@gsuiffet'
       - name: install and build
         run: npm ci --save-dev typescript
-      - name: publish to registry
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@gsuiffet'
-      - run: npm publish
+      - name: publish
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        # npm publish --access public
