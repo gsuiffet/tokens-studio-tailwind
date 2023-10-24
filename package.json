@@ -1,10 +1,13 @@
 {
   "name": "@gsuiffet/tokens-studio-tailwind",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Transform design tokens from tokens-studio into tailwind classes",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "tokens-studio-tailwind": "dist/index.js"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
