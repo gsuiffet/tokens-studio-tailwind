@@ -1,58 +1,37 @@
 import * as commander from 'commander';
+import * as fs from 'fs';
 
 const program = new commander.Command();
 
-program.version("0.0.1")
-
 program
-  // .argument('<name>')
-  .option('-t, --title <honorific>', 'title to use before name')
-  .option('-d, --debug', 'display some debugging')
-  .action((options, command) => {
-    if (options.debug) {
-      console.error('Called %s with options %o', command.name(), options);
+  .option('-j, --json', 'Path to the JSON design tokens')
+  // .parse(process.argv)
+  .action((options) => {
+    if (options.json) {
+      fs.readFile(options.json, 'utf8', (err, data) => {
+        if (err) {
+          console.log('Erreur de lecture du fichier JSON: ', err)
+        } else {
+          const jsonContent = JSON.parse(data)
+          console.log("jsonContent", jsonContent)
+        }
+      })
     }
-    const title = options.title ? `${options.title} ` : '';
-    console.log(`Thank-you ${title}`);
-  });
-
-
-
-
+  })
+  .parse(process.argv)
 
 // program
 //   // .argument('<name>')
-//   .option('-j, --json <design-tokens>', 'title to use before name')
-//   // .option('-d, --debug', 'display some debugging')
+//   .option('-t, --title <honorific>', 'title to use before name')
+//   .option('-d, --debug', 'display some debugging')
 //   .action((options, command) => {
-//     // if (options.debug) {
-//     //   console.error('Called %s with options %o', command.name(), options);
-//     // }
-//     // const title = options.title ? `${options.title} ` : '';
-//     // console.log(`Thank-you ${title}`);
-//     console.log("options.title", options.json)
-//
-//
+//     if (options.debug) {
+//       console.error('Called %s with options %o', command.name(), options);
+//     }
+//     const title = options.title ? `${options.title} ` : '';
+//     console.log(`Thank-you ${title}`);
 //   });
 
-
-
-
-
-
-
-
-program.parse();
-
-// program
-//   .command("say")
-//   .description("say something")
-//   .action((name, options, command) => console.log('lalalalalal', name, options, command))
-//   // .action((name) => {
-//   //   console.log('lalalalalal', name)
-//   // })
-//
-// program.parse(process.argv)
 export function add(a: number, b: number): number {
   // program
   //   .option('--test <test>', 'Option de test personnalisée')
