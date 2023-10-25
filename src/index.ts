@@ -4,8 +4,7 @@ import * as fs from 'fs';
 const program = new commander.Command();
 
 program
-  .option('-j, --json', 'Path to the JSON design tokens')
-  // .parse(process.argv)
+  .option('-j, --json <path>', 'Path to the JSON design tokens')
   .action((options) => {
     if (options.json) {
       fs.readFile(options.json, 'utf8', (err, data) => {
