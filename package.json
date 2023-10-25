@@ -1,6 +1,6 @@
 {
   "name": "@gsuiffet/tokens-studio-tailwind",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Transform design tokens from tokens-studio into tailwind classes",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
