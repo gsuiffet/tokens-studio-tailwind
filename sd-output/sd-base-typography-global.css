@@ -1,0 +1,22 @@
+/**
+ * Do not edit directly
+ * Generated on Thu, 26 Oct 2023 13:43:09 GMT
+ */
+
+@layer base {
+  h1 {
+    @apply font-bold  font-Inter normal-case no-underline text-sd-font-size-4 tracking-sd-letter-spacing-0 leading-sd-line-heights-0 pl-[--paragraph-indent-0] ;
+  }
+  h2 {
+    @apply font-semibold  font-Inter normal-case no-underline text-sd-font-size-3 tracking-sd-letter-spacing-1 leading-sd-line-heights-1 pl-[--paragraph-indent-0] ;
+  }
+  h3 {
+    @apply font-semibold  font-Inter normal-case no-underline text-sd-font-size-2 tracking-sd-letter-spacing-2 leading-sd-line-heights-2 pl-[--paragraph-indent-0] ;
+  }
+  h4 {
+    @apply font-semibold  font-Inter normal-case no-underline text-sd-font-size-1 tracking-sd-letter-spacing-3 leading-sd-line-heights-3 pl-[--paragraph-indent-0] ;
+  }
+  p {
+    @apply font-normal  font-Inter normal-case no-underline text-sd-font-size-0 tracking-sd-letter-spacing-4 leading-sd-line-heights-3 pl-[--paragraph-indent-0] ;
+  }
+}

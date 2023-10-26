@@ -11,7 +11,7 @@
     "tokens-studio-tailwind": "dist/index.js"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "dist"

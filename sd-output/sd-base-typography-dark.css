@@ -1,0 +1,22 @@
+/**
+ * Do not edit directly
+ * Generated on Thu, 26 Oct 2023 13:43:09 GMT
+ */
+
+@layer base {
+  h1 {
+    @apply dark:font-bold  dark:font-Inter dark:normal-case dark:no-underline dark:text-sd-font-size-1 dark:tracking-sd-letter-spacing-0 dark:leading-sd-line-heights-0 dark:pl-[--paragraph-indent-0] ;
+  }
+  h2 {
+    @apply dark:font-semibold  dark:font-Inter dark:normal-case dark:no-underline dark:text-sd-font-size-3 dark:tracking-sd-letter-spacing-1 dark:leading-sd-line-heights-1 dark:pl-[--paragraph-indent-0] ;
+  }
+  h3 {
+    @apply dark:font-semibold  dark:font-Inter dark:normal-case dark:no-underline dark:text-sd-font-size-2 dark:tracking-sd-letter-spacing-2 dark:leading-sd-line-heights-2 dark:pl-[--paragraph-indent-0] ;
+  }
+  h4 {
+    @apply dark:font-semibold  dark:font-Inter dark:normal-case dark:no-underline dark:text-sd-font-size-1 dark:tracking-sd-letter-spacing-3 dark:leading-sd-line-heights-3 dark:pl-[--paragraph-indent-0] ;
+  }
+  p {
+    @apply dark:font-normal  dark:font-Inter dark:normal-case dark:no-underline dark:text-sd-font-size-0 dark:tracking-sd-letter-spacing-4 dark:leading-sd-line-heights-3 dark:pl-[--paragraph-indent-0] ;
+  }
+}

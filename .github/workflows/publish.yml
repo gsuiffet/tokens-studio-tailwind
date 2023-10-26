@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 18.x
           cache: "pnpm"
-          registry-url: 'https://registry.npmjs.org/'
+          registry-url: 'https://npm.pkg.github.com'
           scope: '@gsuiffet'
       - run: pnpm install --frozen-lockfile
       - name: Create Release Pull Request or Publish
