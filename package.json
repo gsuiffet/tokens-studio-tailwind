@@ -20,7 +20,7 @@
     "build": "tsup",
     "test": "jest",
     "lint": "tsc",
-    "release": "npm run build && changeset publish",
+    "release": "npm run build && changeset publish && npm publish --access public",
     "version-packages": "changeset version"
   },
   "dependencies": {
