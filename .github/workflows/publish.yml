@@ -26,3 +26,6 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: pnpm run build
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
