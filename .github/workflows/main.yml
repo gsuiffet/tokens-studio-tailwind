@@ -1,27 +1,52 @@
-name: tokens-studio-tailwind
+#name: tokens-studio-tailwind
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#jobs:
+#  build-and-deploy:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: checkout
+#        uses: actions/checkout@v4.1.1
+#      - name: node
+#        uses: actions/setup-node@v4.0.0
+#        with:
+#          node-version: 18
+#          registry-url: 'https://registry.npmjs.org'
+#          scope: '@gsuiffet'
+#      - name: install
+#        run: npm ci
+#      - name: build
+#        run : npm run build
+#      - name: publish
+#        run: npm publish --access public
+#        env:
+#          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
+name: CI
 on:
   push:
     branches:
-      - main
+      - "**"
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v4.1.1
-      - name: node
-        uses: actions/setup-node@v4.0.0
+      - uses: actions/checkout@v4.1.1
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@gsuiffet'
-      - name: install
-        run: npm ci
-      - name: build
-        run : npm run build
-      - name: publish
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        # npm publish --access public
+          version: 8.9
+      - uses: actions/setup-node@v4.0.0
+        with:
+          node-version: 18.x
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      # todo test
+      - run: pnpm run lint && pnpm run build
+
+#      - name: publish
+#        run: npm publish --access public
+#        env:
+#          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

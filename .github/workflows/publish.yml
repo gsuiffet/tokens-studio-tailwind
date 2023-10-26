@@ -1,0 +1,28 @@
+name: Publish
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.9
+      - uses: actions/setup-node@v4.0.0
+        with:
+          node-version: 18.x
+          cache: "pnpm"
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@gsuiffet'
+      - run: pnpm install --frozen-lockfile
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@1
+        with:
+          publish: pnpm run build

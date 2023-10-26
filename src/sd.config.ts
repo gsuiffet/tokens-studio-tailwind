@@ -1,115 +1,28 @@
-import StyleDictionary, {formatHelpers, TransformedToken} from 'style-dictionary';
-import {DesignTokens} from './'
-import {kebabCase} from 'lodash';
+import StyleDictionary, {formatHelpers, TransformedToken, DesignTokens} from 'style-dictionary';
+import {
+  cssVariables,
+  cssVariablesBaseTypography,
+  getTypographyClass,
+  htmlElementTypography,
+} from "./sd-utils";
 const { fileHeader } = formatHelpers;
 
-const cssVariables = ['letterSpacing', 'fontSizes', 'dimension', 'lineHeights', 'color', 'borderRadius'];
-const cssVariablesForBaseElement = [
-  'textCase',
-  'textDecoration',
-  'typography',
-  'fontWeights',
-  'fontFamilies',
-];
-const htmlBaseElement = [
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'p',
-  'li',
-  'a',
-  'blockquote',
-  'button',
-  'th',
-  'td',
-  'code',
-  'small',
-];
-
-const textCasePossibleValues = {
-  none: 'normal-case',
-  uppercase: 'uppercase',
-  lowercase: 'lowercase',
-  capitalize: 'capitalize',
-};
-const textDecorationPossibleValues = {
-  none: 'no-underline',
-  underline: 'underline',
-  'line-through': 'line-through',
-};
-const fontWeights = {
-  Thin: 'thin',
-  'Extra Light': 'extralight',
-  Light: 'light',
-  Regular: 'normal',
-  Medium: 'medium',
-  'Semi Bold': 'semibold',
-  Bold: 'bold',
-  'Extra Bold': 'extrabold',
-  Black: 'black',
-};
-function getVariable(variable: string) {
-  return kebabCase(variable.replace(/[{}]/g, '').replace('.', '-'));
-}
-
-function getPropertyValue(
-  packageName: string,
-  selectedProperty: TransformedToken | string,
-  prefix: string,
-  possibleValues = {},
-  suffix = ""
-) {
-  if (selectedProperty && typeof selectedProperty === "string") {
-    return `${packageName}${prefix}${getVariable(selectedProperty)}${suffix}`
-  } else if (selectedProperty && typeof selectedProperty !== "string") {
-    switch (selectedProperty.type) {
-      case 'fontWeights':
-        const formattedValue = selectedProperty.value.replace(' Italic', '')
-        const italic = selectedProperty.value.includes('Italic') ? `italic` : ''
-        return possibleValues[formattedValue]
-          ? `${packageName}${prefix}${possibleValues[formattedValue]} ${italic}`
-          : ""
-      case 'fontFamilies':
-        return `${packageName}${prefix}${selectedProperty.value}`
-      default:
-        return possibleValues[selectedProperty.value]
-          ? `${packageName}${prefix}${possibleValues[selectedProperty.value]}`
-          : ""
-    }
-  } else {
-    return ""
-  }
-}
-
-function getProperty(allProperties: TransformedToken[], selectedProperty: string) {
-  return allProperties.find(
-    ({ name }) => selectedProperty && kebabCase(name) === getVariable(selectedProperty),
-  )
-}
-
 StyleDictionary.registerFormat({
-  name: 'baseElement/format',
+  name: 'baseTypography/format',
   formatter: ({ dictionary: {allProperties}, file, file: {packageName} }) => {
     return `${fileHeader({ file })}@layer base {\n${allProperties
-      .filter(({ name }) => htmlBaseElement.includes(name))
-      .map(({ name, original: { value } }) => {
-        const {fontSize, letterSpacing, lineHeight, paragraphIndent, textCase, textDecoration, fontFamily, fontWeight} = value;
-        const caseProperty = getProperty(allProperties, textCase);
-        const decorationProperty = getProperty(allProperties, textDecoration)
-        const fontWeightProperty = getProperty(allProperties, fontWeight)
-        const fontFamilyProperty = getProperty(allProperties, fontFamily)
-        const className =
-          `${getPropertyValue(packageName, fontWeightProperty, 'font-', fontWeights)} ` +
-          `${getPropertyValue(packageName, fontFamilyProperty, 'font-')} ` +
-          `${getPropertyValue(packageName, caseProperty, "", textCasePossibleValues)} ` +
-          `${getPropertyValue(packageName, decorationProperty, "", textDecorationPossibleValues)} ` +
-          `${getPropertyValue(packageName, fontSize, 'text-sd-')} ` +
-          `${getPropertyValue(packageName, letterSpacing, 'tracking-sd-')} ` +
-          `${getPropertyValue(packageName, lineHeight, 'leading-sd-')} ` +
-          `${getPropertyValue(packageName, paragraphIndent, 'pl-[--', undefined, ']')} `;
-        return `  ${name} {\n    @apply ${className};\n  }\n`;
-      })
+      .filter(({ name, type }) => type === 'typography' && htmlElementTypography.includes(name))
+      .map(({ name, original: { value } }) => getTypographyClass(name, value, packageName as string, allProperties))
+      .join('')}}`;
+  },
+});
+
+StyleDictionary.registerFormat({
+  name: 'componentTypography/format',
+  formatter: ({ dictionary: {allProperties}, file, file: {packageName} }) => {
+    return `${fileHeader({ file })}@layer components {\n${allProperties
+      .filter(({ name, type }) => type === 'typography' && !htmlElementTypography.includes(name))
+      .map(({ name, original: { value } }) => getTypographyClass(`.${name}`, value, packageName as string, allProperties))
       .join('')}}`;
   },
 });
@@ -148,21 +61,26 @@ function getStyleDictionaryConfig(designTokens: DesignTokens, theme: string ) {
     platforms: {
       css: {
         transforms: ['attribute/cti', 'name/cti/kebab', 'sizes/px/em'],
-        buildPath: `sd-output/`,
+        buildPath: 'sd-output/',
         files: [
           {
             destination: `sd-${theme}.css`,
             format: 'css/variables',
             packageName: `${theme === 'global' ? ':root' : `.${theme}`}`,
-            filter: ({type}) => cssVariables.includes(type),
+            filter: (prop: TransformedToken) => cssVariables.includes(prop.type),
           },
           {
-            destination: `sd-base-element-${theme}.css`,
-            format: 'baseElement/format',
+            destination: `sd-base-typography-${theme}.css`,
+            format: 'baseTypography/format',
             packageName: `${theme === 'global' ? '' : `${theme}:`}`,
-            filter: ({type}) => cssVariablesForBaseElement.includes(type),
+            filter: (prop: TransformedToken) => cssVariablesBaseTypography.includes(prop.type),
           },
-          //todo if not in base create class component ?
+          {
+            destination: `sd-component-typography-${theme}.css`,
+            format: 'componentTypography/format',
+            packageName: `${theme === 'global' ? '' : `${theme}:`}`,
+            filter: (prop: TransformedToken) => cssVariablesBaseTypography.includes(prop.type),
+          }
         ],
       },
     },

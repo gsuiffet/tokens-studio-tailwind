@@ -1,11 +1,15 @@
-import {kebabCase} from 'lodash';
+import {DesignToken, TransformedToken} from "style-dictionary";
+import {kebabCase} from "lodash";
 
-
-
-const tokens = require('../tokens/tokens.json');
-const themes = ['global', 'dark'];
-
-const htmlBaseElement = [
+export const cssVariables = ['letterSpacing', 'fontSizes', 'dimension', 'lineHeights', 'color', 'borderRadius'];
+export const cssVariablesBaseTypography = [
+  'textCase',
+  'textDecoration',
+  'typography',
+  'fontWeights',
+  'fontFamilies',
+];
+export const htmlElementTypography = [
   'h1',
   'h2',
   'h3',
@@ -21,16 +25,21 @@ const htmlBaseElement = [
   'small',
 ];
 
-const cssVariables = ['letterSpacing', 'fontSizes', 'dimension', 'lineHeights', 'color', 'borderRadius'];
+function getVariable(variable: string) {
+  return kebabCase(variable.replace(/[{}]/g, '').replace('.', '-'));
+}
 
-const cssVariablesForBaseElement = [
-  'textCase',
-  'textDecoration',
-  'typography',
-  'fontWeights',
-  'fontFamilies',
-];
-
+const textCasePossibleValues = {
+  none: 'normal-case',
+  uppercase: 'uppercase',
+  lowercase: 'lowercase',
+  capitalize: 'capitalize',
+};
+const textDecorationPossibleValues = {
+  none: 'no-underline',
+  underline: 'underline',
+  'line-through': 'line-through',
+};
 const fontWeights = {
   Thin: 'thin',
   'Extra Light': 'extralight',
@@ -43,49 +52,60 @@ const fontWeights = {
   Black: 'black',
 };
 
-const textDecorationPossibleValues = {
-  none: 'no-underline',
-  underline: 'underline',
-  'line-through': 'line-through',
-};
-
-const textCasePossibleValues = {
-  none: 'normal-case',
-  uppercase: 'uppercase',
-  lowercase: 'lowercase',
-  capitalize: 'capitalize',
-};
-
-function getVariable(variable) {
-  return kebabCase(variable.replace(/[{}]/g, '').replace('.', '-'));
+function getProperty(allProperties: TransformedToken[], selectedProperty: string) {
+  return allProperties.find(
+    ({ name }) => selectedProperty && kebabCase(name) === getVariable(selectedProperty),
+  )
 }
 
-// function generateCSSVariables(type) {
-//   const cssVariables = {};
-//   function processNode(node, currentPrefix = "") {
-//     for (const key in node) {
-//       const currentKey = `${currentPrefix}${key}`;
-//       if (typeof node[key] === "object" && node[key].type !== type) {
-//         processNode(node[key], `${currentKey}-`);
-//       } else if (node[key].type === type) {
-//         cssVariables[`sd-${kebabCase(currentKey)}`] = `var(--${kebabCase(currentKey)})`;
-//       }
-//     }
-//   }
-//   themes.forEach((theme) => {
-//     processNode(tokens[theme])
-//   })
-//   return cssVariables;
-// }
+function getPropertyValue<T>(
+  packageName: string,
+  selectedProperty?: TransformedToken | string,
+  prefix= "",
+  possibleValues?: {[key: string]: T},
+  suffix= ""
+) {
+  if (selectedProperty && typeof selectedProperty === "string") {
+    return `${packageName}${prefix}${getVariable(selectedProperty)}${suffix}`
+  } else if (selectedProperty && typeof selectedProperty !== "string") {
+    switch (selectedProperty.type) {
+      case 'fontWeights':
+        const formattedValue = (selectedProperty.value as string).replace(' Italic', '')
+        const italic = (selectedProperty.value as string).includes('Italic') ? `italic` : ''
+        return possibleValues && possibleValues[formattedValue]
+          ? `${packageName}${prefix}${possibleValues[formattedValue]} ${italic}`
+          : ""
+      case 'fontFamilies':
+        return `${packageName}${prefix}${selectedProperty.value}`
+      default:
+        return typeof selectedProperty.value === "string" && possibleValues && possibleValues[selectedProperty.value]
+          ? `${packageName}${prefix}${possibleValues[selectedProperty.value]}`
+          : ""
+    }
+  } else {
+    return ""
+  }
+}
 
-module.exports = {
-  themes,
-  htmlBaseElement,
-  fontWeights,
-  textDecorationPossibleValues,
-  textCasePossibleValues,
-  cssVariables,
-  cssVariablesForBaseElement,
-  getVariable,
-  // generateCSSVariables,
-};
+export function getTypographyClass(
+  name: string,
+  value: DesignToken,
+  packageName: string,
+  allProperties: TransformedToken[]
+) {
+  const {fontSize, letterSpacing, lineHeight, paragraphIndent, textCase, textDecoration, fontFamily, fontWeight} = value;
+  const caseProperty = getProperty(allProperties, textCase);
+  const decorationProperty = getProperty(allProperties, textDecoration)
+  const fontWeightProperty = getProperty(allProperties, fontWeight)
+  const fontFamilyProperty = getProperty(allProperties, fontFamily)
+  const className =
+    `${getPropertyValue(packageName, fontWeightProperty, 'font-', fontWeights)} ` +
+    `${getPropertyValue(packageName, fontFamilyProperty, 'font-')} ` +
+    `${getPropertyValue(packageName, caseProperty, undefined, textCasePossibleValues)} ` +
+    `${getPropertyValue(packageName, decorationProperty, "", textDecorationPossibleValues)} ` +
+    `${getPropertyValue(packageName, fontSize, 'text-sd-')} ` +
+    `${getPropertyValue(packageName, letterSpacing, 'tracking-sd-')} ` +
+    `${getPropertyValue(packageName, lineHeight, 'leading-sd-')} ` +
+    `${getPropertyValue(packageName, paragraphIndent, 'pl-[--', undefined, ']')} `;
+  return `  ${name} {\n    @apply ${className};\n  }\n`;
+}
