@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "bin": {
     "tokens-studio-tailwind": "dist/index.js"
   },
