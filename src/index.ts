@@ -14,8 +14,6 @@ program
     const indexCSSData = `${formattedThemes.map((theme: string) =>
       `@import './sd-${theme}.css';\n@import './sd-base-typography-${theme}.css';\n@import './sd-component-typography-${theme}.css';\n`
     ).join('')}`
-
-    // if (json) {
       try {
         if (!fs.existsSync('./sd-output')){
           fs.mkdirSync('./sd-output');
@@ -27,9 +25,6 @@ program
       } catch (err) {
         throw new Error(`Unexpected error: ${err}`)
       }
-    // } else {
-    //   throw new Error('Missing design tokens path')
-    // }
   })
   .parse(process.argv)
 
