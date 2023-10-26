@@ -21,34 +21,13 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           scope: '@gsuiffet'
       - run: pnpm install --frozen-lockfile
-
-
-#      - name: build
-#        run : npm run build
-#      - name: publish
-#        run: pnpm publish --access public
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-#          publish: pnpm run build && npm publish --access public
-#          "version-packages": "changeset version && npm run prettier"
-
-
-#      - name: Create Release Pull Request or Publish
-#        id: changesets
-#        uses: changesets/action@v1
-#        with:
-#          publish: npm run release
-##          version: npm run version-packages
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-##          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-
-      - name: Create Release Pull Request
+      - name: Publish
+        id: changesets
         uses: changesets/action@v1
         with:
-          # this expects you to have a npm script called version that runs some logic and then calls `changeset version`.
-          version: npm run release
+          publish: npm run release
+          version: npm run version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
