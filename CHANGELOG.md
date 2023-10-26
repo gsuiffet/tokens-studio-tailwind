@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 0.0.21
+
+### Patch Changes
+
+- test
+
 ## 0.0.20
 
 ### Patch Changes
