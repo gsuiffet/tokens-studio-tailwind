@@ -19,7 +19,9 @@
   "scripts": {
     "build": "tsup",
     "test": "jest",
-    "lint": "tsc"
+    "lint": "tsc",
+    "release": "npm run build && changeset publish",
+    "version-packages": "changeset version"
   },
   "dependencies": {
     "commander": "^11.1.0",
