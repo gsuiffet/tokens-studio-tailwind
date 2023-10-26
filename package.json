@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "bin": {
     "tokens-studio-tailwind": "dist/index.js"
   },
@@ -20,7 +20,7 @@
     "build": "tsup",
     "test": "jest",
     "lint": "tsc",
-    "release": "npm run build && changeset publish",
+    "release": "npm run build && changeset version",
     "version-packages": "changeset version"
   },
   "dependencies": {
