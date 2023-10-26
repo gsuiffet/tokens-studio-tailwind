@@ -25,7 +25,10 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run build && npm publish --access public
+#          publish: pnpm run build && npm publish --access public
+#          "version-packages": "changeset version && npm run prettier"
+          publish: npm run release
+          version: npm run version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
