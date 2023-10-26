@@ -30,16 +30,19 @@ jobs:
 #        env:
 #          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
+#          publish: pnpm run build && npm publish --access public
+#          "version-packages": "changeset version && npm run prettier"
+
+
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: npm run release
-          version: npm run version-packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          publish: npm run build
+#          publish: npm run release
+#          version: npm run version-packages
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+#          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
 
-#          publish: pnpm run build && npm publish --access public
-#          "version-packages": "changeset version && npm run prettier"
