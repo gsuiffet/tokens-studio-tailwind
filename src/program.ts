@@ -28,5 +28,5 @@ program
       throw new Error('Missing design tokens path')
     }
   })
-  // .parse(process.argv)
+
 export { program };

@@ -1,4 +1,4 @@
-import {DesignToken, TransformedToken} from "style-dictionary";
+import {DesignToken, DesignTokens, TransformedToken} from "style-dictionary";
 import {kebabCase} from "lodash";
 
 export const cssVariables = ['letterSpacing', 'fontSizes', 'dimension', 'lineHeights', 'color', 'borderRadius'];
@@ -108,4 +108,27 @@ export function getTypographyClass(
     `${getPropertyValue(packageName, lineHeight, 'leading-sd-')} ` +
     `${getPropertyValue(packageName, paragraphIndent, 'pl-[--', undefined, ']')} `;
   return `  ${name} {\n    @apply ${className};\n  }\n`;
+}
+
+export function generateCSSVariables(tokens: DesignTokens, themes = ['global'], type: string) {
+  const cssVariables: Record<string, string> = {};
+  function processNode(node: DesignTokens | DesignToken, currentPrefix = "") {
+    for (const key in node) {
+      if (node.hasOwnProperty(key)) {
+        const currentKey = `${currentPrefix}${key}`;
+        if (typeof node[key] === "object" && node[key].type !== type) {
+          processNode(node[key], `${currentKey}-`);
+        } else if (node[key].type === type) {
+          cssVariables[`sd-${kebabCase(currentKey)}`] = `var(--${kebabCase(currentKey)})`;
+        }
+      }
+    }
+  }
+  themes.forEach((theme) => {
+    const themeNode = tokens[theme]
+    if (themeNode) {
+      processNode(themeNode)
+    }
+  })
+  return cssVariables;
 }
