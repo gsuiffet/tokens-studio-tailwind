@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 0.3.0
+
+### Minor Changes
+
+- e91fc5c: husky
+
 ## 0.2.0
 
 ### Minor Changes
