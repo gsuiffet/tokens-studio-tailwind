@@ -1,18 +1,18 @@
 import { DesignTokens } from 'style-dictionary';
 import { program } from './program';
-import { generateCSSVariables } from './sd-utils';
+import { generateTailwindClasses } from './sd-utils';
 
 if (require.main === module) {
   program.parse(process.argv);
 }
 
-export function getCSSVariables(tokens: DesignTokens, themes: string[]) {
+export function getTailwindClasses(tokens: DesignTokens, themes: string[]) {
   return {
-    fontSize: generateCSSVariables(tokens, themes, 'fontSizes'),
-    letterSpacing: generateCSSVariables(tokens, themes, 'letterSpacing'),
-    lineHeight: generateCSSVariables(tokens, themes, 'lineHeights'),
-    spacing: generateCSSVariables(tokens, themes, 'dimension'),
-    color: generateCSSVariables(tokens, themes, 'color'),
-    borderRadius: generateCSSVariables(tokens, themes, 'borderRadius'),
+    fontSize: generateTailwindClasses(tokens, themes, 'fontSizes'),
+    letterSpacing: generateTailwindClasses(tokens, themes, 'letterSpacing'),
+    lineHeight: generateTailwindClasses(tokens, themes, 'lineHeights'),
+    spacing: generateTailwindClasses(tokens, themes, 'dimension'),
+    color: generateTailwindClasses(tokens, themes, 'color'),
+    borderRadius: generateTailwindClasses(tokens, themes, 'borderRadius'),
   };
 }
