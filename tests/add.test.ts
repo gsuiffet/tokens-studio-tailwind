@@ -1,3 +1,3 @@
 test('adds two numbers correctly', () => {
-  expect(true).toBeTruthy()
+  expect(true).toBeTruthy();
 });
