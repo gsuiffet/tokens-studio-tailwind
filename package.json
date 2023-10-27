@@ -19,10 +19,9 @@
   "scripts": {
     "build": "tsup",
     "test": "jest",
-    "lint": "tsc",
+    "lint": "tsc && eslint \"{src,tests}/**/*.ts\" && prettier --check .",
     "version": "changeset version",
     "release": "npm run build && changeset publish",
-    "lp:check": "npm run lint && prettier --check .",
     "p:fix": "prettier --write ."
   },
   "dependencies": {
@@ -36,6 +35,10 @@
     "@types/jest": "^29.5.6",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.8.9",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.7.0",
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",

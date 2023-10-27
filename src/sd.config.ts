@@ -91,7 +91,7 @@ function getStyleDictionaryConfig(designTokens: DesignTokens, theme: string) {
   };
 }
 
-export function createStyles<T>(designTokens: DesignTokens, themes: string[]) {
+export function createStyles(designTokens: DesignTokens, themes: string[]) {
   themes.map((theme) => {
     StyleDictionary.extend(getStyleDictionaryConfig(designTokens, theme)).buildPlatform('css');
   });
