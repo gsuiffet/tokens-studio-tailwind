@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 0.1.0
+
+### Minor Changes
+
+- 8e1257d: add prettier
+
 ## 0.0.25
 
 ### Patch Changes
