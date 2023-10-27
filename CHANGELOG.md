@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 0.3.2
+
+### Patch Changes
+
+- 1527d6c: fix generateTailwindClasses
+
 ## 0.3.1
 
 ### Patch Changes
