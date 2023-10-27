@@ -21,7 +21,9 @@
     "test": "jest",
     "lint": "tsc",
     "version": "changeset version",
-    "release": "npm run build && changeset publish"
+    "release": "npm run build && changeset publish",
+    "lp:check": "npm run lint && prettier --check .",
+    "p:fix": "prettier --write ."
   },
   "dependencies": {
     "commander": "^11.1.0",
@@ -35,6 +37,7 @@
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.8.9",
     "jest": "^29.7.0",
+    "prettier": "^3.0.3",
     "ts-jest": "^29.1.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2"

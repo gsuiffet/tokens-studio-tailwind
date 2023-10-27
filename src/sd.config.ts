@@ -1,28 +1,32 @@
-import StyleDictionary, {formatHelpers, TransformedToken, DesignTokens} from 'style-dictionary';
+import StyleDictionary, { formatHelpers, TransformedToken, DesignTokens } from 'style-dictionary';
 import {
   cssVariables,
   cssVariablesBaseTypography,
   getTypographyClass,
   htmlElementTypography,
-} from "./sd-utils";
+} from './sd-utils';
 const { fileHeader } = formatHelpers;
 
 StyleDictionary.registerFormat({
   name: 'baseTypography/format',
-  formatter: ({ dictionary: {allProperties}, file, file: {packageName} }) => {
+  formatter: ({ dictionary: { allProperties }, file, file: { packageName } }) => {
     return `${fileHeader({ file })}@layer base {\n${allProperties
       .filter(({ name, type }) => type === 'typography' && htmlElementTypography.includes(name))
-      .map(({ name, original: { value } }) => getTypographyClass(name, value, packageName as string, allProperties))
+      .map(({ name, original: { value } }) =>
+        getTypographyClass(name, value, packageName as string, allProperties),
+      )
       .join('')}}`;
   },
 });
 
 StyleDictionary.registerFormat({
   name: 'componentTypography/format',
-  formatter: ({ dictionary: {allProperties}, file, file: {packageName} }) => {
+  formatter: ({ dictionary: { allProperties }, file, file: { packageName } }) => {
     return `${fileHeader({ file })}@layer components {\n${allProperties
       .filter(({ name, type }) => type === 'typography' && !htmlElementTypography.includes(name))
-      .map(({ name, original: { value } }) => getTypographyClass(`.${name}`, value, packageName as string, allProperties))
+      .map(({ name, original: { value } }) =>
+        getTypographyClass(`.${name}`, value, packageName as string, allProperties),
+      )
       .join('')}}`;
   },
 });
@@ -33,10 +37,10 @@ StyleDictionary.registerTransform({
   matcher: ({ type }) => cssVariables.includes(type),
   transformer: ({ original: { value, type } }) => {
     if (type === 'color') {
-      return value
+      return value;
     }
     if (value.endsWith('%')) {
-      return String(`${Number(value.replace('%', '') / 100)}em`) // 1% = 0.01 em;
+      return String(`${Number(value.replace('%', '') / 100)}em`); // 1% = 0.01 em;
     }
     if (!value.endsWith('px')) {
       return `${value}px`;
@@ -47,15 +51,15 @@ StyleDictionary.registerTransform({
 
 StyleDictionary.registerFormat({
   name: 'css/variables',
-  formatter: ({ dictionary, file, file: {packageName} }) => {
-    return `${fileHeader({ file })}@layer base {\n  ${
-      packageName
-    } {\n${dictionary.allProperties.map(({ name, value }) => `    --${name}: ${value};`).join('\n')}
+  formatter: ({ dictionary, file, file: { packageName } }) => {
+    return `${fileHeader({ file })}@layer base {\n  ${packageName} {\n${dictionary.allProperties
+      .map(({ name, value }) => `    --${name}: ${value};`)
+      .join('\n')}
   }\n}`;
   },
 });
 
-function getStyleDictionaryConfig(designTokens: DesignTokens, theme: string ) {
+function getStyleDictionaryConfig(designTokens: DesignTokens, theme: string) {
   return {
     tokens: designTokens[theme],
     platforms: {
@@ -80,14 +84,14 @@ function getStyleDictionaryConfig(designTokens: DesignTokens, theme: string ) {
             format: 'componentTypography/format',
             packageName: `${theme === 'global' ? '' : `${theme}:`}`,
             filter: (prop: TransformedToken) => cssVariablesBaseTypography.includes(prop.type),
-          }
+          },
         ],
       },
     },
   };
 }
 
-export function createStyles<T>(designTokens: DesignTokens, themes: string[] ) {
+export function createStyles<T>(designTokens: DesignTokens, themes: string[]) {
   themes.map((theme) => {
     StyleDictionary.extend(getStyleDictionaryConfig(designTokens, theme)).buildPlatform('css');
   });

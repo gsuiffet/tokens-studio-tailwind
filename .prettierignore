@@ -1,0 +1,11 @@
+/dist
+/coverage
+node_modules
+.github
+.changeset
+*.md
+pnpm-lock.yaml
+
+.vscode
+.DS_Store
+.idea
