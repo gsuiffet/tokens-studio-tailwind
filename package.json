@@ -1,15 +1,12 @@
 {
   "name": "@gsuiffet/tokens-studio-tailwind",
-  "license": "ISC",
+  "license": "MIT",
   "author": "Guillaume Suiffet",
   "description": "Transform design tokens from tokens-studio into tailwind classes",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "version": "0.0.24",
-  "bin": {
-    "tokens-studio-tailwind": "dist/index.js"
-  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -21,8 +18,7 @@
     "test": "jest",
     "lint": "tsc",
     "version": "changeset version",
-    "release": "npm run build && changeset publish",
-    "status": "changeset status"
+    "release": "npm run build && changeset publish"
   },
   "dependencies": {
     "commander": "^11.1.0",
