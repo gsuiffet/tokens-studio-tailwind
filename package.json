@@ -20,9 +20,8 @@
     "build": "tsup",
     "test": "jest",
     "lint": "tsc",
-    "release": "npm run build && changeset publish",
-    "version-packages": "changeset version",
-    "cs": "changeset && changeset version"
+    "version": "changeset version",
+    "release": "changeset publish"
   },
   "dependencies": {
     "commander": "^11.1.0",
