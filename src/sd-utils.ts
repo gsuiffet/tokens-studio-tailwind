@@ -130,7 +130,7 @@ export function getTypographyClass(
   return `  ${name} {\n    @apply ${className};\n  }\n`;
 }
 
-export function generateCSSVariables(tokens: DesignTokens, themes = ['global'], type: string) {
+export function generateTailwindClasses(tokens: DesignTokens, themes = ['global'], type: string) {
   const cssVariables: Record<string, string> = {};
   function processNode(node: DesignTokens | DesignToken, currentPrefix = '') {
     for (const key in node) {
