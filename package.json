@@ -21,7 +21,8 @@
     "test": "jest",
     "lint": "tsc",
     "version": "changeset version",
-    "release": "changeset publish"
+    "release": "npm run build && changeset publish",
+    "status": "changeset status"
   },
   "dependencies": {
     "commander": "^11.1.0",
