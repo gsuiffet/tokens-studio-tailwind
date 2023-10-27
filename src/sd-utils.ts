@@ -134,11 +134,13 @@ export function generateTailwindClasses(tokens: DesignTokens, themes = ['global'
   const cssVariables: Record<string, string> = {};
   function processNode(node: DesignTokens | DesignToken, currentPrefix = '') {
     for (const key in node) {
-      const currentKey = `${currentPrefix}${key}`;
-      if (node[key].type !== type) {
-        processNode(node[key], `${currentKey}-`);
-      } else if (node[key].type === type) {
-        cssVariables[`sd-${kebabCase(currentKey)}`] = `var(--${kebabCase(currentKey)})`;
+      if (typeof node === 'object' && node[key]) {
+        const currentKey = `${currentPrefix}${key}`;
+        if (node[key].type !== type) {
+          processNode(node[key], `${currentKey}-`);
+        } else if (node[key].type === type) {
+          cssVariables[`sd-${kebabCase(currentKey)}`] = `var(--${kebabCase(currentKey)})`;
+        }
       }
     }
   }
