@@ -76,12 +76,14 @@ function getPropertyValue<T>(
     return `${packageName}${prefix}${getVariable(selectedProperty)}${suffix}`;
   } else if (selectedProperty && typeof selectedProperty !== 'string') {
     switch (selectedProperty.type) {
-      case 'fontWeights':
-        const formattedValue = (selectedProperty.value as string).replace(' Italic', '');
-        const italic = (selectedProperty.value as string).includes('Italic') ? `italic` : '';
+      case 'fontWeights': {
+        const { value } = selectedProperty;
+        const formattedValue = value.replace(' Italic', '');
+        const italic = value.includes('Italic') ? `italic` : '';
         return possibleValues && possibleValues[formattedValue]
           ? `${packageName}${prefix}${possibleValues[formattedValue]} ${italic}`
           : '';
+      }
       case 'fontFamilies':
         return `${packageName}${prefix}${selectedProperty.value}`;
       default:
@@ -132,13 +134,11 @@ export function generateCSSVariables(tokens: DesignTokens, themes = ['global'], 
   const cssVariables: Record<string, string> = {};
   function processNode(node: DesignTokens | DesignToken, currentPrefix = '') {
     for (const key in node) {
-      if (node.hasOwnProperty(key)) {
-        const currentKey = `${currentPrefix}${key}`;
-        if (typeof node[key] === 'object' && node[key].type !== type) {
-          processNode(node[key], `${currentKey}-`);
-        } else if (node[key].type === type) {
-          cssVariables[`sd-${kebabCase(currentKey)}`] = `var(--${kebabCase(currentKey)})`;
-        }
+      const currentKey = `${currentPrefix}${key}`;
+      if (node[key].type !== type) {
+        processNode(node[key], `${currentKey}-`);
+      } else if (node[key].type === type) {
+        cssVariables[`sd-${kebabCase(currentKey)}`] = `var(--${kebabCase(currentKey)})`;
       }
     }
   }
