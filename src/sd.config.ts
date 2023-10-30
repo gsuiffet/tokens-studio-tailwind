@@ -1,10 +1,11 @@
 import StyleDictionary, { formatHelpers, TransformedToken, DesignTokens } from 'style-dictionary';
+import { getTypographyClass } from './sd-utils';
 import {
   cssVariables,
   cssVariablesBaseTypography,
-  getTypographyClass,
   htmlElementTypography,
-} from './sd-utils';
+  sdOutputDirectory,
+} from '../utils/constants';
 const { fileHeader } = formatHelpers;
 
 StyleDictionary.registerFormat({
@@ -65,7 +66,7 @@ function getStyleDictionaryConfig(designTokens: DesignTokens, theme: string) {
     platforms: {
       css: {
         transforms: ['attribute/cti', 'name/cti/kebab', 'sizes/px/em'],
-        buildPath: 'sd-output/',
+        buildPath: sdOutputDirectory,
         files: [
           {
             destination: `sd-${theme}.css`,

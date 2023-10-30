@@ -1,12 +1,16 @@
 import { DesignTokens } from 'style-dictionary';
 import { program } from './program';
 import { generateTailwindClasses } from './sd-utils';
+import { ErrorMissingGlobalTheme } from '../utils/error';
 
 if (require.main === module) {
   program.parse(process.argv);
 }
 
-export function getTailwindClasses(tokens: DesignTokens, themes: string[]) {
+export function getTailwindClasses(tokens: DesignTokens, themes = ['global']) {
+  if (!themes.includes('global')) {
+    throw new Error(ErrorMissingGlobalTheme);
+  }
   return {
     fontSize: generateTailwindClasses(tokens, themes, 'fontSizes'),
     letterSpacing: generateTailwindClasses(tokens, themes, 'letterSpacing'),
