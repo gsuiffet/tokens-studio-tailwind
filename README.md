@@ -44,7 +44,8 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 <br>
 
 **⚠ WARNING**
-> The JSON design tokens should include a theme named 'global'. This theme will be used to generate root CSS.
+> - The JSON design tokens should include a theme named 'global'. This theme will be used to generate root CSS.
+> - All the keys in your design tokens should be in kebabCase
 
 <br>
 
@@ -302,15 +303,85 @@ The utility function `getTailwindClasses` will generate an object that you can m
 ```
 
 ## Supported CSS Properties
-This package currently supports the following CSS properties:
-- fontSize
-- letterSpacing
-- lineHeight
-- spacing
-- color
-- borderRadius
+This package currently provides support for a variety of CSS properties to help you generate Tailwind CSS classes from your design tokens. The supported CSS properties include:
+- **lineHeight**
+- **fontSize**
+- **letterSpacing**
+- **paragraphIndent**
+- **textCase**
+- **textDecoration**
+- **spacing**
+- **color**
+- **borderRadius**
+- **fontFamily***
+- **fontWeight***
 
-For each supported property, refer to the provided examples for usage details.
+***Special cases:***
+
+### fontFamily
+
+Generating font families may require manual intervention when a font family is linked to a composite token. For example:
+```json
+{
+  "h1": {
+    "fontFamilies": {
+      "inter": {
+        "value": "Inter",
+        "type": "fontFamilies"
+      }
+    },
+    "value": {
+      "fontFamily": "{fontFamilies.inter}"
+    },
+    "type": "typography"
+  }
+}
+```
+Running the build:sd will generate the `sd-base-typography-global.css` file as follows:
+```css
+@layer base {
+  h1 {
+    @apply font-Inter;
+  }
+}
+```
+To address this, you'll need to set the font family manually. For example, to set a font variable using Next.js, you can refer to this documentation [NextJs](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css). Once you've obtained the font variable, you can add it to your tailwind.config.js as demonstrated below:"
+```js
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
+module.exports = {
+  theme: {
+    extend: {
+      "fontFamily": {
+        "Inter": ["var(--Inter)", ...fontFamily.sans]
+      }
+    }
+  }
+}
+```
+
+<br>
+
+### fontWeight
+
+Font weight values should be one of the accepted values from the following list:
+- Thin
+- Thin Italic
+- Extra Light
+- Extra Light Italic
+- Light
+- Light Italic
+- Regular
+- Regular Italic
+- Medium
+- Medium Italic
+- Semi Bold
+- Semi Bold Italic
+- Bold
+- Bold Italic
+- Extra Bold
+- Extra Bold Italic
+- Black Italic
 
 ## Contributing
 To contribute to this project:
