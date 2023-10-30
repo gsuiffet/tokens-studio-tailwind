@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 1.0.2
+
+### Patch Changes
+
+- b782275: fix multiple theme with the same key but different value
+
 ## 1.0.1
 
 ### Patch Changes
