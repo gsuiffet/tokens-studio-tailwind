@@ -1,6 +1,8 @@
 import * as commander from 'commander';
 import fs from 'fs';
 import { createStyles } from './sd.config';
+import { ErrorMissingGlobalTheme } from '../utils/error';
+import { sdOutputDirectoryPath } from '../utils/constants';
 
 const program = new commander.Command();
 
@@ -11,23 +13,21 @@ program
     const formattedThemes = themes
       ? themes.split(',').map((theme: string) => theme.trim())
       : ['global'];
-    const indexCSSData = `${formattedThemes
-      .map(
-        (theme: string) =>
-          `@import './sd-${theme}.css';\n@import './sd-base-typography-${theme}.css';\n@import './sd-component-typography-${theme}.css';\n`,
-      )
-      .join('')}`;
+    if (!formattedThemes.includes('global')) {
+      throw new Error(ErrorMissingGlobalTheme);
+    }
     if (json) {
       try {
-        if (!fs.existsSync('./sd-output')) {
-          fs.mkdirSync('./sd-output');
-        }
-        fs.writeFileSync('./sd-output/index.css', indexCSSData);
         const data = fs.readFileSync(json, 'utf8');
         const designTokens = JSON.parse(data);
         createStyles(designTokens, formattedThemes);
-      } catch (err) {
-        throw new Error(`Unexpected error: ${err}`);
+        const createdFiles = fs.readdirSync(sdOutputDirectoryPath);
+        fs.writeFileSync(
+          './sd-output/index.css',
+          `${createdFiles.map((createdFile) => `@import './${createdFile}';\n`).join('')}`,
+        );
+      } catch (error) {
+        throw new Error(`Unexpected error: ${error}`);
       }
     } else {
       throw new Error('Missing design tokens path');

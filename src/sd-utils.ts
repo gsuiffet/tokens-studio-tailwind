@@ -1,63 +1,14 @@
 import { DesignToken, DesignTokens, TransformedToken } from 'style-dictionary';
 import { kebabCase } from 'lodash';
-
-export const cssVariables = [
-  'letterSpacing',
-  'fontSizes',
-  'dimension',
-  'lineHeights',
-  'color',
-  'borderRadius',
-];
-export const cssVariablesBaseTypography = [
-  'textCase',
-  'textDecoration',
-  'typography',
-  'fontWeights',
-  'fontFamilies',
-];
-export const htmlElementTypography = [
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'p',
-  'li',
-  'a',
-  'blockquote',
-  'button',
-  'th',
-  'td',
-  'code',
-  'small',
-];
+import {
+  textCasePossibleValues,
+  textDecorationPossibleValues,
+  fontWeights,
+} from '../utils/constants';
 
 function getVariable(variable: string) {
   return kebabCase(variable.replace(/[{}]/g, '').replace('.', '-'));
 }
-
-const textCasePossibleValues = {
-  none: 'normal-case',
-  uppercase: 'uppercase',
-  lowercase: 'lowercase',
-  capitalize: 'capitalize',
-};
-const textDecorationPossibleValues = {
-  none: 'no-underline',
-  underline: 'underline',
-  'line-through': 'line-through',
-};
-const fontWeights = {
-  Thin: 'thin',
-  'Extra Light': 'extralight',
-  Light: 'light',
-  Regular: 'normal',
-  Medium: 'medium',
-  'Semi Bold': 'semibold',
-  Bold: 'bold',
-  'Extra Bold': 'extrabold',
-  Black: 'black',
-};
 
 function getProperty(allProperties: TransformedToken[], selectedProperty: string) {
   return allProperties.find(
@@ -130,7 +81,7 @@ export function getTypographyClass(
   return `  ${name} {\n    @apply ${className};\n  }\n`;
 }
 
-export function generateTailwindClasses(tokens: DesignTokens, themes = ['global'], type: string) {
+export function generateTailwindClasses(tokens: DesignTokens, themes: string[], type: string) {
   const cssVariables: Record<string, string> = {};
   function processNode(node: DesignTokens | DesignToken, currentPrefix = '') {
     for (const key in node) {

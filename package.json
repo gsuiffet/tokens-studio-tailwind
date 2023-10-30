@@ -19,7 +19,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "tsup",
-    "test": "jest",
+    "test": "jest --coverage",
     "lint": "tsc && eslint \"{src,tests}/**/*.ts\" && prettier --check .",
     "version": "changeset version",
     "release": "pnpm run build && changeset publish",
