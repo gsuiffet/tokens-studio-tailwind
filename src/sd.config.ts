@@ -54,7 +54,10 @@ StyleDictionary.registerFormat({
   name: 'css/variables',
   formatter: ({ dictionary, file, file: { packageName } }) => {
     return `${fileHeader({ file })}@layer base {\n  ${packageName} {\n${dictionary.allProperties
-      .map(({ name, value }) => `    --${name}: ${value};`)
+      .map(
+        ({ name, value }) =>
+          `    --${name}: ${value}${packageName !== ':root' ? ' !important' : ''};`,
+      )
       .join('\n')}
   }\n}`;
   },
