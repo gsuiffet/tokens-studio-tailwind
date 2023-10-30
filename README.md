@@ -9,11 +9,15 @@ Design Tokens Studio Tailwind streamlines the process of integrating design toke
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Usage](#usage)
+1. [Compatibility](#compatibility)
+2. [Installation](#installation)
+3. [Usage](#usage)
 4. [Examples](#examples)
 5. [Supported CSS Properties](#supported-css-properties)
-5. [Contributing](#contributing)
+6. [Contributing](#contributing)
+
+## Compatibility
+**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3 If you are using a different version, please check for compatibility or consider updating your Tailwind CSS installation. 
 
 ## Installation
 
@@ -28,6 +32,8 @@ pnpm add @gsuiffet/tokens-studio-tailwind
 ```
 
 ## Usage
+
+This project is being tested under
 
 There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS project:
 1. **Synchronize Design Tokens from Tokens Studio:**
