@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 1.0.0
+
+### Major Changes
+
+- 28d2799: add test & refactor
+
 ## 0.3.2
 
 ### Patch Changes
