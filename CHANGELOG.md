@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 1.0.5
+
+### Patch Changes
+
+- eb7800b: fix readme
+
 ## 1.0.4
 
 ### Patch Changes
