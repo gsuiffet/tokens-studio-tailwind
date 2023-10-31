@@ -7,6 +7,7 @@ import {
   sdOutputDirectory,
 } from '../utils/constants';
 const { fileHeader } = formatHelpers;
+import { kebabCase } from 'lodash';
 
 StyleDictionary.registerFormat({
   name: 'baseTypography/format',
@@ -56,7 +57,7 @@ StyleDictionary.registerFormat({
     return `${fileHeader({ file })}@layer base {\n  ${packageName} {\n${dictionary.allProperties
       .map(
         ({ name, value }) =>
-          `    --${name}: ${value}${packageName !== ':root' ? ' !important' : ''};`,
+          `    --${kebabCase(name)}: ${value}${packageName !== ':root' ? ' !important' : ''};`,
       )
       .join('\n')}
   }\n}`;

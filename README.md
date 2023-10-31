@@ -17,7 +17,7 @@ Design Tokens Studio Tailwind streamlines the process of integrating design toke
 6. [Contributing](#contributing)
 
 ## Compatibility
-**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3 If you are using a different version, please check for compatibility or consider updating your Tailwind CSS installation. 
+**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3`. If you are using a different version, please check for compatibility or consider updating your Tailwind CSS installation. 
 
 ## Installation
 
@@ -33,8 +33,6 @@ pnpm add @gsuiffet/tokens-studio-tailwind
 
 ## Usage
 
-This project is being tested under
-
 There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS project:
 1. **Synchronize Design Tokens from Tokens Studio:**
    - Sync your JSON design tokens file from [Tokens Studio](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma-figma-tokens) with your repository
@@ -45,7 +43,6 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 
 **⚠ WARNING**
 > - The JSON design tokens should include a theme named 'global'. This theme will be used to generate root CSS.
-> - All the keys in your design tokens should be in kebabCase
 
 <br>
 
@@ -53,7 +50,7 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 ```json
 {
   "scripts": {
-    "build:sd": "npx @gsuiffet/tokens-studio-tailwind -j tokens/tokens.json -t global,dark",
+    "build:sd": "npx @gsuiffet/tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
     // ... other scripts
   }
 }
@@ -61,7 +58,7 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 - The option `-j` should specify the absolute path to your JSON design tokens file in your project.
 - The option `-t` (optional) is a comma-separated list of your themes.
 
-Place this script at the beginning of your scripts to build your project or run the development environment.
+Place this script at the beginning of your scripts to build your project or run the development environment (e.g., Nextjs):
 ```json
 {
   "scripts": {
@@ -269,7 +266,7 @@ will create a folder named `sd-output` with the following files:
    @import './sd-global.css';
    ```
 
-- A `sd-global.css file, containing CSS rules for the 'global' theme:
+- A `sd-global.css` file, containing CSS rules for the 'global' theme:
   ```css
   @layer base {
     :root {
@@ -345,7 +342,7 @@ Running the build:sd will generate the `sd-base-typography-global.css` file as f
   }
 }
 ```
-To address this, you'll need to set the font family manually. For example, to set a font variable using Next.js, you can refer to this documentation [NextJs](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css). Once you've obtained the font variable, you can add it to your tailwind.config.js as demonstrated below:"
+To address this, you'll need to set the font family manually. For example, to set a font variable using Next.js, you can refer to this documentation [NextJs](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css). Once you've obtained the font variable, you can add it to your tailwind.config.js as demonstrated below:
 ```js
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
