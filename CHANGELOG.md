@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 1.0.4
+
+### Patch Changes
+
+- 688bf18: add a link to the github repo for npm
+
 ## 1.0.3
 
 ### Patch Changes
