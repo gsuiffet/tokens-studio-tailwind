@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 1.0.3
+
+### Patch Changes
+
+- d1912ca: fix key composed of numerical value
+
 ## 1.0.2
 
 ### Patch Changes
