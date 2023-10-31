@@ -194,17 +194,8 @@ will create a folder named `sd-output` with the following files:
 
 - An `index.css` file that imports the generated CSS:
    ```css
-   @import './sd-dark.css';
    @import './sd-global.css';
-   ```
-
-- A `sd-dark.css` file, containing CSS rules for the 'dark' theme:
-  ```css
-  @layer base {
-    .dark {
-      --xs: 4px;
-    }
-  }
+   @import './sd-dark.css';
    ```
 
 - A `sd-global.css` file, containing CSS rules for the 'global' theme:
@@ -216,6 +207,15 @@ will create a folder named `sd-output` with the following files:
       --line-heights-2: 32px;
       --line-heights-3: 28px;
       --xs: 3px;
+    }
+  }
+   ```
+
+- A `sd-dark.css` file, containing CSS rules for the 'dark' theme (we need to use **!important** here because we have the same exact key for the root CSS variable but with a different value):
+  ```css
+  @layer base {
+    .dark {
+      --xs: 4px !important;
     }
   }
    ```
