@@ -1,16 +1,18 @@
 import { program } from '../src/program';
-import { ErrorMissingDesignTokenPath, ErrorMissingGlobalTheme } from '../utils/error';
-import { sdOutputDirectoryPath } from '../utils/constants';
+import { MISSING_DESIGN_TOKEN_PATH, MISSING_GLOBAL_THEME } from '../src/utils';
 import fs from 'fs';
+import { SD_OUTPUT_DIRECTORY_PATH } from '../src/types';
 
 const simpleTokenPath = './__mock__/tokens.json';
 const CompositeTokenPath = './__mock__/tokensWithBaseAndComponent.json';
 
 function clean() {
-  if (fs.existsSync(sdOutputDirectoryPath)) {
-    const createdFiles = fs.readdirSync(sdOutputDirectoryPath);
-    createdFiles.forEach((createdFile) => fs.unlinkSync(`${sdOutputDirectoryPath}/${createdFile}`));
-    fs.rmdirSync(sdOutputDirectoryPath);
+  if (fs.existsSync(SD_OUTPUT_DIRECTORY_PATH)) {
+    const createdFiles = fs.readdirSync(SD_OUTPUT_DIRECTORY_PATH);
+    createdFiles.forEach((createdFile) =>
+      fs.unlinkSync(`${SD_OUTPUT_DIRECTORY_PATH}/${createdFile}`),
+    );
+    fs.rmdirSync(SD_OUTPUT_DIRECTORY_PATH);
   }
 }
 
@@ -24,40 +26,68 @@ describe('program', () => {
 
   test('Should create files in sd-output directory without themes option', () => {
     program.parse(['node', '../dist/index.js', '-j', simpleTokenPath]);
-    const createdFiles = fs.readdirSync(sdOutputDirectoryPath);
-    expect(createdFiles.sort()).toEqual(['index.css', 'sd-global.css'].sort());
-    expect(createdFiles).toHaveLength(2);
+    const createdFiles = fs.readdirSync(SD_OUTPUT_DIRECTORY_PATH);
+    expect(createdFiles.sort()).toEqual(
+      [
+        'base-global.css',
+        'components-global.css',
+        'index.css',
+        'tw-global.json',
+        'tw-tokens.json',
+      ].sort(),
+    );
+    expect(createdFiles).toHaveLength(5);
   });
 
   test('Should create files in sd-output directory with global theme only', () => {
     program.parse(['node', '../dist/index.js', '-j', simpleTokenPath, '-t', 'global']);
-    const createdFiles = fs.readdirSync(sdOutputDirectoryPath);
-    expect(createdFiles.sort()).toEqual(['index.css', 'sd-global.css'].sort());
-    expect(createdFiles).toHaveLength(2);
+    const createdFiles = fs.readdirSync(SD_OUTPUT_DIRECTORY_PATH);
+    expect(createdFiles.sort()).toEqual(
+      [
+        'base-global.css',
+        'components-global.css',
+        'index.css',
+        'tw-global.json',
+        'tw-tokens.json',
+      ].sort(),
+    );
+    expect(createdFiles).toHaveLength(5);
   });
 
   test('Should create files in sd-output directory with multiple themes', () => {
     program.parse(['node', '../dist/index.js', '-j', simpleTokenPath, '-t', 'global,dark']);
-    const createdFiles = fs.readdirSync(sdOutputDirectoryPath);
-    expect(createdFiles.sort()).toEqual(['index.css', 'sd-global.css', 'sd-dark.css'].sort());
-    expect(createdFiles).toHaveLength(3);
+    const createdFiles = fs.readdirSync(SD_OUTPUT_DIRECTORY_PATH);
+    expect(createdFiles.sort()).toEqual(
+      [
+        'base-dark.css',
+        'base-global.css',
+        'components-dark.css',
+        'components-global.css',
+        'index.css',
+        'tw-dark.json',
+        'tw-global.json',
+        'tw-tokens.json',
+      ].sort(),
+    );
+    expect(createdFiles).toHaveLength(8);
   });
 
   test('Should create files in sd-output directory with multiple themes for composite tokens', () => {
     program.parse(['node', '../dist/index.js', '-j', CompositeTokenPath, '-t', 'global,dark']);
-    const createdFiles = fs.readdirSync(sdOutputDirectoryPath);
+    const createdFiles = fs.readdirSync(SD_OUTPUT_DIRECTORY_PATH);
     expect(createdFiles.sort()).toEqual(
       [
+        'base-dark.css',
+        'base-global.css',
+        'components-dark.css',
+        'components-global.css',
         'index.css',
-        'sd-base-typography-dark.css',
-        'sd-base-typography-global.css',
-        'sd-component-typography-dark.css',
-        'sd-component-typography-global.css',
-        'sd-dark.css',
-        'sd-global.css',
+        'tw-dark.json',
+        'tw-global.json',
+        'tw-tokens.json',
       ].sort(),
     );
-    expect(createdFiles).toHaveLength(7);
+    expect(createdFiles).toHaveLength(8);
   });
 
   test('Should throw an Error in case of missing json design tokens path', () => {
@@ -66,11 +96,11 @@ describe('program', () => {
     } catch (error) {
       let message = 'Unknown Error';
       if (error instanceof Error) message = error.message;
-      expect(message).toBe(ErrorMissingDesignTokenPath);
+      expect(message).toBe(MISSING_DESIGN_TOKEN_PATH);
     }
   });
 
-  test('Should throw an Error in case of the json design tokens path does cant be find', () => {
+  test('Should throw an Error in case of the json design tokens path cant be find', () => {
     const fakeJsonPath = '/path/to/json.json';
     try {
       program.parse(['node', '../dist/index.js', '-j', fakeJsonPath]);
@@ -89,7 +119,7 @@ describe('program', () => {
     } catch (error) {
       let message = 'Unknown Error';
       if (error instanceof Error) message = error.message;
-      expect(message).toBe(ErrorMissingGlobalTheme);
+      expect(message).toBe(MISSING_GLOBAL_THEME);
     }
   });
 });
