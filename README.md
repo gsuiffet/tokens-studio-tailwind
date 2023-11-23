@@ -8,16 +8,15 @@ Design Tokens Studio Tailwind streamlines the process of integrating design toke
 
 
 ## Table of Contents
-
-1. [Compatibility](#compatibility)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [Examples](#examples)
-5. [Supported CSS Properties](#supported-css-properties)
-6. [Contributing](#contributing)
+- [Compatibility](#compatibility)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Generated CSS from token](#generated-css-from-token)
+- [Supported tokens](#supported-tokens)
+- [Contributing](#contributing)
 
 ## Compatibility
-**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3`. If you are using a different version, please check for compatibility or consider updating your Tailwind CSS installation. 
+**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3` and Tokens-studio version `^1`. If you are using a different version, please check for compatibility or consider updating your Tailwind CSS installation. 
 
 ## Installation
 
@@ -32,6 +31,10 @@ pnpm add @gsuiffet/tokens-studio-tailwind
 ```
 
 ## Usage
+1. [Add a script to your package.json](#add-a-script-to-your-packagejson)
+2. [Run the script for the first time](#run-the-script-for-the-first-time)
+3. [Import the generated CSS in your CSS file](#import-the-generated-css-in-your-css-file)
+4. [Get and Set Tailwind CSS class utilities](#get-and-set-tailwind-css-class-utilities)
 
 There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS project:
 1. **Synchronize Design Tokens from Tokens Studio:**
@@ -39,10 +42,26 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 2. **Import Design Tokens File:**
    - Export the JSON design tokens file from [Tokens Studio](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma-figma-tokens) and import it directly into your project.
 
-<br>
+Tokens Example:
+```json
+{
+  "global": {
+    "xs": {
+      "value": "3",
+      "type": "lineHeights"
+    }
+  },
+  "dark": {
+    "xs": {
+      "value": "3",
+      "type": "lineHeights"
+    }
+  }
+}
+```
 
 **⚠ WARNING**
-> - The JSON design tokens should include a theme named 'global'. This theme will be used to generate root CSS.
+> The JSON design tokens should include a theme named 'global'. This theme will be used to generate root CSS.
 
 <br>
 
@@ -50,7 +69,7 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 ```json
 {
   "scripts": {
-    "build:sd": "npx @gsuiffet/tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
+    "build:sd": "npx tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
     // ... other scripts
   }
 }
@@ -58,21 +77,37 @@ There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS pro
 - The option `-j` should specify the absolute path to your JSON design tokens file in your project.
 - The option `-t` (optional) is a comma-separated list of your themes.
 
-Place this script at the beginning of your scripts to build your project or run the development environment (e.g., Nextjs):
+Place this script at the beginning of your scripts to build your project or run the development environment (e.g., Next.js):
 ```json
 {
   "scripts": {
     "dev": "npm run build:sd && next dev",
     "build": "npm run build:sd && next build",
-    "build:sd": "npx @gsuiffet/tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
+    "build:sd": "npx tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
   }
 }
 ```
 
 <br>
 
-### Creating a Folder for Generated CSS
-Follow these steps:
+#### Run the script for the first time
+```bash
+npm run build:sd
+```
+
+This will create a folder `sd-output`, at the top-level of your project and generate several files according to your tokens:
+- `index.css` => this will group all css files
+- `base-global.css` => tailwind base layer for root css
+- `base-theme1.css` => tailwind base layer for theme css
+- `components-global.css` => tailwind components layer for root css
+- `components-theme1.css` => tailwind components layer for theme css
+- `tw-global.json` => root css variables
+- `tw-theme1.json` => theme css variables
+- `tw-tokens.json` => this will merge all variable tokens
+
+<br>
+
+#### Import the generated CSS in your CSS file
 1. Install postcss-import in your project using one of the following commands:
     - npm install -D postcss-import
     - pnpm add -D postcss-import
@@ -87,9 +122,7 @@ Follow these steps:
       }
     }
     ```
-3. Create a folder named `sd-output`
-4. inside the `sd-output`, create an empty `index.css` file
-5. import the `sd-output` in your `global.css` file:
+3. import the `sd-output` directory in your `global.css` file:
     ```css
     @import './sd-output';
     @tailwind base;
@@ -103,20 +136,17 @@ Follow these steps:
 
 <br>
 
-#### Getting and Setting Tailwind CSS Classes
+#### Get and Set Tailwind CSS class utilities
 
-Override or extend your theme with the `getTailwindClasses utility function. The function takes two parameters:
-- the JSON design tokens file.
-- an optional array of your themes (default = ["global"]).
+Override or extend your theme using the `./sd-output/tw-tokens.json` file.
   
 Example usage:
 ```js
-const tokens = require('./tokens/tokens.json');
-const {getTailwindClasses} = require('@gsuiffet/tokens-studio-tailwind');
+const tokens = require('./sd-output/tw-tokens.json');
 
 module.exports = {
   theme: {
-    ...getTailwindClasses(tokens, ['global', 'dark']),
+    ...tokens,
     ...
   },
   ...
@@ -125,11 +155,21 @@ module.exports = {
 Or, for more granular control:
 ```js
 const tokens = require('./tokens/tokens.json');
-const {getTailwindClasses} = require('@gsuiffet/tokens-studio-tailwind');
-const {fontSize,color} = getTailwindClasses(tokens, ['global', 'dark'])
+const {
+  spacing,
+  opacity,
+  borderWidth,
+  backgroundImage,
+  color,
+  boxShadow,
+  lineHeight,
+  fontSize,
+  letterSpacing,
+} = tokens
 
 module.exports = {
   theme: {
+    boxShadow,
     extend: {
       fontSize,
       colors: {
@@ -143,206 +183,319 @@ module.exports = {
 }
 ```
 
-<br>
+## Generated CSS from token
+- A token value can be a variable. In such cases, the package will automatically assign the corresponding value.
+- Token key will be transform in KebabCase. In case of multiple children, the package will concat the parent and all children keys.
+- Token located within a theme that is not the `global` theme will be used with the `!important` keyword. This precaution is taken in case the variable shares the same name between theme but holds a different value.
 
-## Examples
+|                     | Token                                                                                                                                                                                 | Generated CSS                                                                                                  |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| Simple token        | <pre>{<br/> "global": {<br/>  "TOKEN_NAME": {<br/>   "value": "TOKEN_VALUE",<br/>   "type": "TOKEN_TYPE"<br/>  }<br/> }<br/>}</pre>                                                   | <pre>@layer base {<br/> :root {<br/>  --token-name: TOKEN_VALUE;<br/> }<br/>}</pre>                            |
+| Token with children | <pre>{<br/> "global": {<br/>  "TOKEN_NAME_PARENT": {<br/>   "TOKEN_NAME_CHILDREN": {<br/>    "value": "TOKEN_VALUE",<br/>    "type": "TOKEN_TYPE"<br/>   }<br/>  }<br/> }<br/>}</pre> | <pre>@layer base {<br/> :root {<br/>  --token-name-parent-token-name-children: TOKEN_VALUE;<br/> }<br/>}</pre> |
+| Theme token         | <pre>{<br/> "dark": {<br/>  "TOKEN_NAME": {<br/>   "value": "TOKEN_VALUE",<br/>   "type": "TOKEN_TYPE"<br/>  }<br/> }<br/>}</pre>                                                     | <pre>@layer base {<br/> .dark {<br/>  --token-name: TOKEN_VALUE !important;<br/> }<br/>}</pre>                 |
 
-If your design token path is located at the root directory of your project, typically at `./tokens.json`.
 
-### Basic tokens
-Suppose you have the following basic design tokens in your `tokens.json:
+## Supported tokens
+This package provides support for:
+- **[fontSizes](#simple-tokens)** (variable)
+- **[letterSpacing](#simple-tokens)** (variable)
+- **[lineHeights](#simple-tokens)** (variable)
+- **[borderWidth](#simple-tokens)** (variable)
+- **[(#simple-tokens)](#simple-tokens)** (variable)
+- **[sizing](#simple-tokens)** (variable)
+- **[dimension](#simple-tokens)** (variable)
+- **[color & linear-gradient](#simple-tokens)** (variable)
+- **[boxShadow](#boxshadow-token)** (variable)
+- **[border](#border-token)** (composite)
+- **[borderRadius](#borderradius-token)** (composite)
+- **[spacing](#spacing-token)** (composite)
+- **[typography](#typography-token)** (composite)
 
+Not supported:
+- assets
+- custom composite
+
+
+### Variables
+#### Simple tokens
+| TOKEN_TYPE      | TAILWIND_UTILITY |     Allowed units      | Default unit | Default TOKEN_VALUE | TAILWIND_UTILITY_CLASS                                                                                                                                                                 |
+|-----------------|------------------|:----------------------:|:------------:|:-------------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| fontSizes       | fontSize         | `px \| % \| rem \| em` |     `px`     |        `0px`        | `text`                                                                                                                                                                                 |
+| letterSpacing   | letterSpacing    | `px \| % \| rem \| em` |     `px`     |        `0px`        | `tracking`<br/> (`%` will be transform to `em`)                                                                                                                                        |
+| lineHeights     | lineHeight       |       `px \| %`        |     `px`     |        `0px`        | `leading`                                                                                                                                                                              |
+| borderWidth     | borderWidth      | `px \| % \| rem \| em` |     `px`     |        `0px`        | `border`<br/> (`%` will be transform to `em`)                                                                                                                                          |
+| opacity         | opacity          |          `%`           |              |         `1`         | `opacity`                                                                                                                                                                              |
+| sizing          | spacing          |   `px \| rem \| em`    |     `px`     |        `0px`        | `p`<br/>- `m`<br/>- `w`<br/>- `h`<br/>- `max-h`<br/>- `gap`<br/>- `top`<br/>- `right`<br/>- `bottom`<br/>- `left`<br/>- `inset-*`<br/>- `space-*`<br/>- `translate-*`<br/>- `scroll-*` |
+| dimension       | spacing          |   `px \| rem \| em`    |     `px`     |        `0px`        | `p`<br/>- `m`<br/>- `w`<br/>- `h`<br/>- `max-h`<br/>- `gap`<br/>- `top`<br/>- `right`<br/>- `bottom`<br/>- `left`<br/>- `inset-*`<br/>- `space-*`<br/>- `translate-*`<br/>- `scroll-*` |
+| color           | color            |                        |              |                     | `text`<br/>- `bg`<br/>- `border`<br/>- `divide`<br/>- `outline`<br/>- `ring`<br/>- `decoration`<br/>- `fill`<br/>- `shadow`                                                            |
+| color           | backgroundImage  |                        |              |                     | `bg`<br/> (This handle `linear-gradient` see [Tokens Studio documentation](https://docs.tokens.studio/available-tokens/color-tokens#gradients))                                        |
+
+Simple token example:
 ```json
 {
   "global": {
-    "lineHeights": {
-      "0": {
-        "value": "100%",
-        "type": "lineHeights"
-      },
-      "1": {
-        "value": "36",
-        "type": "lineHeights"
-      },
-      "2": {
-        "value": "32",
-        "type": "lineHeights"
-      },
-      "3": {
-        "value": "28",
-        "type": "lineHeights"
-      }
-    },
-    "xs": {
-      "value": "3",
-      "type": "lineHeights"
-    }
-  },
-  "dark": {
-    "xs": {
-      "value": "4",
-      "type": "lineHeights"
+    "TOKEN_NAME": {
+      "value": "2",
+      "type": "fontSizes"
     }
   }
 }
 ```
-Running the build:sd script with the command:
-```bash
-npx @gsuiffet/tokens-studio-tailwind -j tokens.json -t global,dark
-```
-will create a folder named `sd-output` with the following files:
-
-- An `index.css` file that imports the generated CSS:
-   ```css
-   @import './sd-global.css';
-   @import './sd-dark.css';
-   ```
-
-- A `sd-global.css` file, containing CSS rules for the 'global' theme:
-  ```css
-  @layer base {
-    :root {
-      --line-heights-0: 1em;
-      --line-heights-1: 36px;
-      --line-heights-2: 32px;
-      --line-heights-3: 28px;
-      --xs: 3px;
-    }
-  }
-   ```
-
-- A `sd-dark.css` file, containing CSS rules for the 'dark' theme (we need to use **!important** here because we have the same exact key for the root CSS variable but with a different value):
-  ```css
-  @layer base {
-    .dark {
-      --xs: 4px !important;
-    }
-  }
-   ```
-
-The utility function `getTailwindClasses` will provide you with an object that you can merge or extend in your `tailwind.config.js` to apply these classes.
-```json
-{
-   "lineHeight": {
-     "sd-line-heights-0": "var(--line-heights-0)",
-     "sd-line-heights-1": "var(--line-heights-1)",
-     "sd-line-heights-2": "var(--line-heights-2)",
-     "sd-line-heights-3": "var(--line-heights-3)",
-     "sd-xs": "var(--xs)"
-   }
-}
-```
-
-### Composite tokens
-If you have composite tokens, such as typography, you can generate CSS files as well. Here's an example of composite tokens in your tokens.json:
-```json
-{
-  "global": {
-    "fontSize": {
-      "4": {
-        "value": "48",
-        "type": "fontSizes"
-      }
-    },
-    "h1": {
-      "value": {
-        "fontSize": "{fontSize.4}"
-      },
-      "type": "typography"
-    }
-  }
-}
-```
-Running the build:sd script with the command:
-```bash
-npx @gsuiffet/tokens-studio-tailwind -j tokens.json
-```
-will create a folder named `sd-output` with the following files:
-
-- An `index.css` file that imports the generated CSS:
-   ```css
-   @import './sd-base-typography-global.css';
-   @import './sd-component-typography-global.css';
-   @import './sd-global.css';
-   ```
-
-- A `sd-global.css` file, containing CSS rules for the 'global' theme:
-  ```css
-  @layer base {
-    :root {
-      --font-size-4: 48px;
-    }
-  }
-   ```
-
-- A `sd-component-typography-global.css` file (this file will be filled in case your tokens include a type `typography` but the name is not a valid HTML element)
-  ```css
-  @layer components {
-  }
-   ```
-
-- A `sd-base-typography-global.css file that provides CSS rules for typography:
-  ```css
-  @layer base {
-    h1 {
-      @apply text-sd-font-size-4;
-    }
-  }
-   ```
-
-The utility function `getTailwindClasses` will generate an object that you can merge or extend in your `tailwind.config.js` to apply these classes.
-```json
-{
-  "fontSize": {
-    "sd-font-size-4": "var(--font-size-4)"
-  }
-}
-```
-
-## Supported CSS Properties
-This package currently provides support for a variety of CSS properties to help you generate Tailwind CSS classes from your design tokens. The supported CSS properties include:
-- **lineHeight**
-- **fontSize**
-- **letterSpacing**
-- **paragraphIndent**
-- **textCase**
-- **textDecoration**
-- **spacing**
-- **color**
-- **borderRadius**
-- **fontFamily***
-- **fontWeight***
-
-***Special cases:***
-
-### fontFamily
-
-Generating font families may require manual intervention when a font family is linked to a composite token. For example:
-```json
-{
-  "h1": {
-    "fontFamilies": {
-      "inter": {
-        "value": "Inter",
-        "type": "fontFamilies"
-      }
-    },
-    "value": {
-      "fontFamily": "{fontFamilies.inter}"
-    },
-    "type": "typography"
-  }
-}
-```
-Running the build:sd will generate the `sd-base-typography-global.css` file as follows:
+This will generate an entry in the `base-global.css` file:
 ```css
 @layer base {
-  h1 {
-    @apply font-Inter;
+  :root {
+    /* fontSize */
+    --TOKEN_NAME: 2px;
   }
 }
 ```
-To address this, you'll need to set the font family manually. For example, to set a font variable using Next.js, you can refer to this documentation [NextJs](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css). Once you've obtained the font variable, you can add it to your tailwind.config.js as demonstrated below:
+
+---
+
+#### boxShadow token
+|        |     Allowed units      |       Allowed values        | Default unit |                         |
+|--------|:----------------------:|:---------------------------:|:------------:|:------------------------|
+| x      | `px \| % \| rem \| em` |          required           |     `px`     | (`%` transform to `em`) |
+| y      | `px \| % \| rem \| em` |          required           |     `px`     | (`%` transform to `em`) |
+| blur   | `px \| % \| rem \| em` |                             |     `px`     | (`%` transform to `em`) |
+| spread | `px \| % \| rem \| em` |                             |     `px`     | (`%` transform to `em`) |
+| type   |                        | `innerShadow \| dropShadow` |              |                         |
+| color  |                        |                             |              |                         |
+
+Simple shadow token example:
+```json
+{
+  "global": {
+    "TOKEN_NAME": {
+      "value": {
+        "x": "1",
+        "y": "2",
+        "blur": "2",
+        "spread": "2",
+        "color": "#c80707",
+        "type": "innerShadow"
+      },
+      "type": "boxShadow"
+    }
+  }
+}
+```
+This will generate an entry in the `base-global.css` file:
+```css
+@layer base {
+  /* boxShadow */
+  --TOKEN_NAME: inset 1px 2px 2px 2px #c80707
+}
+```
+Complex shadow token example:
+```json
+{
+  "global": {
+    "TOKEN_NAME": {
+      "value": [
+        {
+          "x": "1",
+          "y": "2",
+          "blur": "2",
+          "spread": "2",
+          "color": "#c80707",
+          "type": "innerShadow"
+        },
+        {
+          "x": "1",
+          "y": "2",
+          "blur": "2",
+          "spread": "2",
+          "color": "#c80707",
+          "type": "dropShadow"
+        }
+      ],
+      "type": "boxShadow"
+    }
+  }
+}
+```
+This will generate an entry in the `base-global.css` file:
+```css
+@layer base {
+  /* boxShadow */
+  --TOKEN_NAME: inset 1px 2px 2px 2px #c80707, 1px 2px 2px 2px #c80707
+}
+```
+
+### Composites
+#### border token
+|       |     Allowed units      |  Allowed values   | Default unit | Default VALUE | TAILWIND_UTILITY_CLASS                           |
+|-------|:----------------------:|:-----------------:|:------------:|:-------------:|:-------------------------------------------------|
+| width | `px \| % \| rem \| em` |                   |     `px`     |     `0px`     | `border`<br/> (`%` will be transform to `em`)    |
+| color |                        |                   |              | `transparent` | `border`                                         |
+| style |                        | `solid \| dashed` |              |    `solid`    | `border`                                         |
+
+Border token example:
+```json
+{
+  "global": {
+    "TOKEN_NAME": {
+      "value": {
+        "color": "#cc3838",
+        "width": "2",
+        "style": "solid"
+      },
+      "type": "border"
+    }
+  }
+}
+```
+This will generate an entry in the `components-global.css` file:
+
+```css
+@layer components {
+  /* border */
+  .TOKEN_NAME {
+    @apply border-[#cc3838] border-[2px] border-solid;
+  }
+}
+```
+
+---
+
+#### borderRadius token
+| Example value | VALUE                                                                   |
+|---------------|:------------------------------------------------------------------------|
+| `6`           | `rounded-[6px]`                                                         |
+| `6 2`         | `rounded-ss-[6px] rounded-ee-[6px] rounded-se-[2px] rounded-es-[2px]`   |
+| `6 2 4`       | `rounded-ss-[6px] rounded-se-[2px] rounded-es-[2px] rounded-ee-[4px]`   |
+| `6 2 4 8`     | `rounded-ss-[6px] rounded-se-[2px] rounded-ee-[4px] rounded-es-[8px]`   |
+
+|  Allowed units   | Default unit |
+|:----------------:|:------------:|
+| `px \| % \| rem` |     `px`     |
+
+BorderRadius token example:
+```json
+{
+  "global": {
+    "TOKEN_NAME": {
+      "value": "6",
+      "type": "borderRadius"
+    }
+  }
+}
+```
+This will generate an entry in the `components-global.css` file:
+```css
+@layer components {
+  /* BorderRadius */
+  .TOKEN_NAME {
+    @apply rounded-[6px];
+  }
+}
+```
+
+---
+
+#### spacing token
+| Example value | VALUE <br/> (`%` transform to `em`)   |
+|---------------|:--------------------------------------|
+| `6`           | `gap-[6px]`                           |
+| `6 2`         | `py-[6px] px-[6px]`                   |
+| `6 2 4`       | `pt-[6px] px-[2px] pb-[4px]`          |
+| `6 2 4 8`     | `pt-[6px] pr-[2px] pb-[4px] pl-[8px]` |
+
+|      Allowed units      | Default unit |
+|:-----------------------:|:------------:|
+| `px \| % \| rem  \| em` |     `px`     |
+
+Spacing token example:
+```json
+{
+  "global": {
+    "TOKEN_NAME": {
+      "value": "6",
+      "type": "spacing"
+    }
+  }
+}
+```
+This will generate an entry in the `components-global.css` file:
+```css
+@layer components {
+  /* spacing */
+  .TOKEN_NAME {
+    @apply gap-[6px];
+  }
+}
+```
+
+---
+
+#### typography token
+|                           |     Allowed units      | Allowed values                                | Default unit | Default VALUE  | TAILWIND_UTILITY_CLASS                          |
+|---------------------------|:----------------------:|:----------------------------------------------|:------------:|:--------------:|:------------------------------------------------|
+| [fontFamily](#fontfamily) |   required (string)    |                                               |              |     `sans`     | `font`                                          |
+| fontSize                  | `px \| % \| rem \| em` |                                               |     `px`     |     `0px`      | `text`                                          |
+| letterSpacing             | `px \| % \| rem \| em` |                                               |     `px`     |     `0px`      | `tracking`<br/> (`%` will be transform to `em`) |
+| lineHeight                |       `px \| %`        |                                               |     `px`     |     `0px`      | `leading`                                       |
+| paragraphIndent           |       `px \| %`        |                                               |     `px`     |     `0px`      | `pl`                                            |
+| fontWeight                |                        | [fontWeight value](#fontweight-value)         |              | `font-medium`  | [fontWeight value](#fontweight-value)           |
+| textCase                  |                        | [textCase value](#textCase-value)             |              | `normal-case`  | [textCase value](#textCase-value)               |
+| textDecoration            |                        | [textDecoration value](#textdecoration-value) |              | `no-underline` | [textDecoration value](#textdecoration-value)   |
+
+##### fontWeight value
+| Allowed values       |  TAILWIND_UTILITY_CLASS  |
+|----------------------|:------------------------:|
+| `Thin`               |       `font-thin`        |
+| `100`                |       `font-thin`        |
+| `Thin Italic`        |    `font-thin italic`    |
+| `Extra Light`        |    `font-extralight`     |
+| `200`                |    `font-extralight`     |
+| `Extra Light Italic` | `font-extralight italic` |
+| `Light`              |       `font-light`       |
+| `300`                |       `font-light`       |
+| `Light Italic`       |   `font-light italic`    |
+| `Regular`            |      `font-normal`       |
+| `400`                |      `font-normal`       |
+| `Regular Italic`     |   `font-normal italic`   |
+| `Medium`             |      `font-medium`       |
+| `500`                |      `font-medium`       |
+| `Medium Italic`      |   `font-medium italic`   |
+| `Semi Bold`          |     `font-semibold`      |
+| `600`                |     `font-semibold`      |
+| `Semi Bold Italic`   |  `font-semibold italic`  |
+| `Bold`               |       `font-bold`        |
+| `700`                |       `font-bold`        |
+| `Bold Italic`        |    `font-bold italic`    |
+| `Extra Bold`         |     `font-extrabold`     |
+| `800`                |     `font-extrabold`     |
+| `Extra Bold Italic`  | `font-extrabold italic`  |
+| `Black`              |       `font-black`       |
+| `900`                |       `font-black`       |
+| `Black Italic`       |   `font-black italic`    |
+
+##### textCase value
+| Allowed values | TAILWIND_UTILITY_CLASS |
+|----------------|:----------------------:|
+| `none`         |     `normal-case`      |
+| `uppercase`    |      `uppercase`       |
+| `lowercase`    |      `lowercase`       |
+| `capitalize`   |      `capitalize`      |
+
+##### textDecoration value
+| Allowed values | TAILWIND_UTILITY_CLASS |
+|----------------|:----------------------:|
+| `none`         |     `no-underline`     |
+| `underline`    |      `underline`       |
+| `line-through` |     `line-through`     |
+
+#### fontFamily
+fontFamily may require manual intervention.
+
+| Token                                                                                                                                                  | Generated CSS                                                            |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| <pre>{<br/> "global": {<br/>  "h1": {<br/>   "value": {<br/>    "fontFamily": "Inter"<br/>   },<br/>   "type": "typography"<br/>  }<br/> }<br/>}</pre> | <pre>@layer base {<br/> h1 {<br/>  @apply: font-Inter<br/> }<br/>}</pre> |
+
+To address this, you'll need to set the font family manually. For example, to set a font variable using Next.js, you can refer to this documentation [Next.js](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#with-tailwind-css). Once you've obtained the font variable, you can add it to your tailwind.config.js as demonstrated below:
 ```js
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
@@ -357,29 +510,112 @@ module.exports = {
 }
 ```
 
-<br>
+Typography token example:
+```json
+{
+  "global": {
+    "h1": {
+      "value": {
+        "fontFamily": "Inter",
+        "fontWeight": "Bold Italic",
+        "lineHeight": "100%",
+        "fontSize": "48",
+        "letterSpacing": "-1.2%",
+        "paragraphSpacing": "",
+        "paragraphIndent": "",
+        "textCase": "none",
+        "textDecoration": "none"
+      },
+      "type": "typography"
+    },
+    "subtitle": {
+     "value": {
+        "fontFamily": "Inter",
+        "fontWeight": "Bold Italic",
+        "lineHeight": "100%",
+        "fontSize": "24",
+        "letterSpacing": "-1.2%",
+        "paragraphSpacing": "",
+        "paragraphIndent": "",
+        "textCase": "none",
+        "textDecoration": "none"
+     },
+     "type": "typography"
+    }
+  },
+  "dark": {
+    "h1": {
+      "value": {
+        "fontFamily": "Inter",
+        "fontWeight": "Bold Italic",
+        "lineHeight": "100%",
+        "fontSize": "48",
+        "letterSpacing": "-1.2%",
+        "paragraphSpacing": "",
+        "paragraphIndent": "",
+        "textCase": "none",
+        "textDecoration": "none"
+      },
+      "type": "typography"
+    },
+    "subtitle": {
+      "value": {
+        "fontFamily": "Inter",
+        "fontWeight": "Bold Italic",
+        "lineHeight": "100%",
+        "fontSize": "24",
+        "letterSpacing": "-1.2%",
+        "paragraphSpacing": "",
+        "paragraphIndent": "",
+        "textCase": "none",
+        "textDecoration": "none"
+     },
+     "type": "typography"
+    }
+  }
+}
+```
 
-### fontWeight
+- ⚠️ paragraphSpacing will be ignored
+- If the TOKEN_NAME is a html element `h1 | h2 | h3 | h4 | p | li | a | blockquote | button | th | td | code | small`, this will generate an entry in the base-*.css file:
 
-Font weight values should be one of the accepted values from the following list:
-- Thin
-- Thin Italic
-- Extra Light
-- Extra Light Italic
-- Light
-- Light Italic
-- Regular
-- Regular Italic
-- Medium
-- Medium Italic
-- Semi Bold
-- Semi Bold Italic
-- Bold
-- Bold Italic
-- Extra Bold
-- Extra Bold Italic
-- Black Italic
-
+This will generate several files:
+- An entry in the `base-global.css` file:
+   ```css
+   @layer base {
+     /* typography */
+     h1 {
+       @apply text-[48px] tracking-[-0.012em] leading-[100%] pl-[0px] normal-case no-underline font-bold italic font-Inter
+     }
+   }
+   ```
+- An entry in the `components-global.css` file:
+   ```css
+   @layer components {
+     /* typography */
+     .subtitle {
+       @apply text-[24px] tracking-[-0.012em] leading-[100%] pl-[0px] normal-case no-underline font-bold italic font-Inter
+     }
+   }
+   ```
+- An entry in the `base-dark.css` file:
+   ```css
+   @layer base {
+     /* typography */
+     h1 {
+       @apply dark:text-[48px] dark:tracking-[-0.012em] dark:leading-[100%] dark:pl-[0px] dark:normal-case dark:no-underline dark:font-bold italic dark:font-Inter;
+     }
+   }
+   ```
+- An entry in the `components-dark.css` file:
+   ```css
+   @layer components {
+     /* typography */
+     .subtitle {
+       @apply dark:text-[24px] dark:tracking-[-0.012em] dark:leading-[100%] dark:pl-[0px] dark:normal-case dark:no-underline dark:font-bold italic dark:font-Inter
+     }
+   }
+   ```
 ## Contributing
 To contribute to this project:
 
