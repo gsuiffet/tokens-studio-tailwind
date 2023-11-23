@@ -74,7 +74,7 @@ Add the following script to your `package.json`:
 ```json
 {
   "scripts": {
-    "build:sd": "npx tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
+    "build:sd": "tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
     // ... other scripts
   }
 }
@@ -88,7 +88,7 @@ Place this script at the beginning of your scripts to build your project or run 
   "scripts": {
     "dev": "npm run build:sd && next dev",
     "build": "npm run build:sd && next build",
-    "build:sd": "npx tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
+    "build:sd": "tokens-studio-tailwind -j tokens/tokens.json -t global,dark"
   }
 }
 ```
