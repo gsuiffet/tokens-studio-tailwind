@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.0.1
+
+### Patch Changes
+
+- 7dc5469: Refactor readme file
+
 ## 2.0.0
 
 ### Major Changes
