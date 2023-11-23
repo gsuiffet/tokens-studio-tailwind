@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.0.0
+
+### Major Changes
+
+- 31ec125: Handle almost all tokens & better install method & get tailwind utilities from the generated sd-output folder
+
 ## 1.0.5
 
 ### Patch Changes
