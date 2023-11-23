@@ -1,10 +1,10 @@
 # Design Tokens Studio Tailwind
 
-**@gsuiffet/tokens-studio-tailwind** is a npm package that simplify the integration of design tokens from Tokens Studio into Tailwind CSS projects.
+**@gsuiffet/tokens-studio-tailwind** is a npm package designed to streamline the integration of design tokens from Tokens Studio into Tailwind CSS projects.
 
 ## Introduction
 
-Design Tokens Studio Tailwind streamlines the process of integrating design tokens from Tokens Studio into Tailwind CSS projects. It helps you maintain consistency in your design system by providing an easy way to map design tokens to CSS properties.
+Design Tokens Studio Tailwind simplifies the process of integrating design tokens from Tokens Studio into Tailwind CSS projects. It ensures consistency in your design system by providing an efficient way to map design tokens to CSS properties.
 
 
 ## Table of Contents
@@ -16,11 +16,11 @@ Design Tokens Studio Tailwind streamlines the process of integrating design toke
 - [Contributing](#contributing)
 
 ## Compatibility
-**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3` and Tokens-studio version `^1`. If you are using a different version, please check for compatibility or consider updating your Tailwind CSS installation. 
+**Tailwind CSS Version:** This package is compatible with Tailwind CSS version `^3` and Tokens-studio version `^1`. For different versions, please check compatibility or consider updating your Tailwind CSS installation.
 
 ## Installation
 
-You can install this package using your preferred package manager:
+Install this package using your preferred package manager:
 
 ```bash
 npm install @gsuiffet/tokens-studio-tailwind
@@ -31,18 +31,22 @@ pnpm add @gsuiffet/tokens-studio-tailwind
 ```
 
 ## Usage
-1. [Add a script to your package.json](#add-a-script-to-your-packagejson)
-2. [Run the script for the first time](#run-the-script-for-the-first-time)
-3. [Import the generated CSS in your CSS file](#import-the-generated-css-in-your-css-file)
-4. [Get and Set Tailwind CSS class utilities](#get-and-set-tailwind-css-class-utilities)
+### Introduction
+To integrate Design this package into your Tailwind CSS project, follow these steps:
 
-There are two ways to use Design Tokens Studio Tailwind in your Tailwind CSS project:
+1. [Adding a Script to package.json](#adding-a-script-to-packagejson)
+2. [Running the Script](#running-the-script)
+3. [Importing Generated CSS](#importing-generated-css)
+4. [Setting Tailwind CSS Class Utilities](#setting-tailwind-css-class-utilities)
+
+### Two Methods of Usage
+There are two methods to utilize Tokens Studio Tailwind in your Tailwind CSS project:
 1. **Synchronize Design Tokens from Tokens Studio:**
    - Sync your JSON design tokens file from [Tokens Studio](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma-figma-tokens) with your repository
 2. **Import Design Tokens File:**
    - Export the JSON design tokens file from [Tokens Studio](https://www.figma.com/community/plugin/843461159747178978/tokens-studio-for-figma-figma-tokens) and import it directly into your project.
 
-Tokens Example:
+### Example Tokens
 ```json
 {
   "global": {
@@ -61,11 +65,12 @@ Tokens Example:
 ```
 
 **⚠ WARNING**
-> The JSON design tokens should include a theme named 'global'. This theme will be used to generate root CSS.
+> Ensure the JSON design tokens include a theme named 'global', which will be used to generate root CSS.
 
 <br>
 
-#### Add a script to your package.json
+#### Adding a Script to package.json
+Add the following script to your `package.json`:
 ```json
 {
   "scripts": {
@@ -74,8 +79,8 @@ Tokens Example:
   }
 }
 ```
-- The option `-j` should specify the absolute path to your JSON design tokens file in your project.
-- The option `-t` (optional) is a comma-separated list of your themes.
+- The `-j` option specifies the absolute path to your JSON design tokens file.
+- The `-t` option (optional) is a comma-separated list of your themes.
 
 Place this script at the beginning of your scripts to build your project or run the development environment (e.g., Next.js):
 ```json
@@ -90,12 +95,13 @@ Place this script at the beginning of your scripts to build your project or run 
 
 <br>
 
-#### Run the script for the first time
+#### Running the Script
+Run the script for the first time:
 ```bash
 npm run build:sd
 ```
 
-This will create a folder `sd-output`, at the top-level of your project and generate several files according to your tokens:
+This will create a `sd-output` folder at the top-level of your project and generate several files according to your tokens.
 - `index.css` => this will group all css files
 - `base-global.css` => tailwind base layer for root css
 - `base-theme1.css` => tailwind base layer for theme css
@@ -107,12 +113,13 @@ This will create a folder `sd-output`, at the top-level of your project and gene
 
 <br>
 
-#### Import the generated CSS in your CSS file
-1. Install postcss-import in your project using one of the following commands:
+#### Importing Generated CSS
+To import the generated CSS into your CSS file:
+1. Install `postcss-import` using one of these commands:
     - npm install -D postcss-import
     - pnpm add -D postcss-import
     - yarn add -D postcss-import
-2. In your postcss.config.js file, add the `postcss-import` plugin
+2. Add the `postcss-import` plugin in your `postcss.config.js file:
     ```js
     module.exports = {
       plugins: {
@@ -136,7 +143,7 @@ This will create a folder `sd-output`, at the top-level of your project and gene
 
 <br>
 
-#### Get and Set Tailwind CSS class utilities
+#### Setting Tailwind CSS Class Utilities
 
 Override or extend your theme using the `./sd-output/tw-tokens.json` file.
   
@@ -152,7 +159,7 @@ module.exports = {
   ...
 }
 ```
-Or, for more granular control:
+For more granular control:
 ```js
 const tokens = require('./tokens/tokens.json');
 const {
@@ -184,9 +191,12 @@ module.exports = {
 ```
 
 ## Generated CSS from token
-- A token value can be a variable. In such cases, the package will automatically assign the corresponding value.
-- Token key will be transform in KebabCase. In case of multiple children, the package will concat the parent and all children keys.
-- Token located within a theme that is not the `global` theme will be used with the `!important` keyword. This precaution is taken in case the variable shares the same name between theme but holds a different value.
+When generating CSS from tokens, consider the following points:
+
+
+- **Variable Token Values:** A token value may be defined as a variable. In such cases, the package will automatically assign the corresponding value.
+- **Transformation of Token Keys:** Token keys are transformed into kebab-case format. For tokens with multiple children, the package concatenates the parent key with all children keys.
+- **Theme-specific Token Handling:** Tokens located within a theme other than the `global` theme will be utilized with the `!important` keyword. This approach is adopted as a precautionary measure, especially when a variable shares the same name between themes but contains different values.
 
 |                     | Token                                                                                                                                                                                 | Generated CSS                                                                                                  |
 |---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
@@ -196,7 +206,7 @@ module.exports = {
 
 
 ## Supported tokens
-This package provides support for:
+This package provides support for the following:
 - **[fontSizes](#simple-tokens)** (variable)
 - **[letterSpacing](#simple-tokens)** (variable)
 - **[lineHeights](#simple-tokens)** (variable)
@@ -230,7 +240,7 @@ Not supported:
 | color           | color            |                        |              |                     | `text`<br/>- `bg`<br/>- `border`<br/>- `divide`<br/>- `outline`<br/>- `ring`<br/>- `decoration`<br/>- `fill`<br/>- `shadow`                                                            |
 | color           | backgroundImage  |                        |              |                     | `bg`<br/> (This handle `linear-gradient` see [Tokens Studio documentation](https://docs.tokens.studio/available-tokens/color-tokens#gradients))                                        |
 
-Simple token example:
+Example for a simple token:
 ```json
 {
   "global": {
@@ -263,7 +273,7 @@ This will generate an entry in the `base-global.css` file:
 | type   |                        | `innerShadow \| dropShadow` |              |                         |
 | color  |                        |                             |              |                         |
 
-Simple shadow token example:
+Example for a simple shadow token:
 ```json
 {
   "global": {
@@ -288,7 +298,7 @@ This will generate an entry in the `base-global.css` file:
   --TOKEN_NAME: inset 1px 2px 2px 2px #c80707
 }
 ```
-Complex shadow token example:
+Example for a complex shadow token:
 ```json
 {
   "global": {
@@ -332,7 +342,7 @@ This will generate an entry in the `base-global.css` file:
 | color |                        |                   |              | `transparent` | `border`                                         |
 | style |                        | `solid \| dashed` |              |    `solid`    | `border`                                         |
 
-Border token example:
+Example Border Token:
 ```json
 {
   "global": {
@@ -372,7 +382,7 @@ This will generate an entry in the `components-global.css` file:
 |:----------------:|:------------:|
 | `px \| % \| rem` |     `px`     |
 
-BorderRadius token example:
+Example BorderRadius Token:
 ```json
 {
   "global": {
@@ -407,7 +417,7 @@ This will generate an entry in the `components-global.css` file:
 |:-----------------------:|:------------:|
 | `px \| % \| rem  \| em` |     `px`     |
 
-Spacing token example:
+Example Spacing Token:
 ```json
 {
   "global": {
@@ -510,7 +520,7 @@ module.exports = {
 }
 ```
 
-Typography token example:
+Example Typography Token:
 ```json
 {
   "global": {
@@ -615,7 +625,8 @@ This will generate several files:
        @apply dark:text-[24px] dark:tracking-[-0.012em] dark:leading-[100%] dark:pl-[0px] dark:normal-case dark:no-underline dark:font-bold italic dark:font-Inter
      }
    }
-   ```
+   ``` 
+
 ## Contributing
 To contribute to this project:
 
