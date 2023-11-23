@@ -10,7 +10,6 @@ const {
   BORDER_WIDTH,
   OPACITY,
   PARAGRAPH_INDENT,
-
   SIZING,
   DIMENSION,
 } = TokenTypes;
