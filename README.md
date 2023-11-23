@@ -211,7 +211,7 @@ This package provides support for the following:
 - **[letterSpacing](#simple-tokens)** (variable)
 - **[lineHeights](#simple-tokens)** (variable)
 - **[borderWidth](#simple-tokens)** (variable)
-- **[(#simple-tokens)](#simple-tokens)** (variable)
+- **[opacity](#simple-tokens)** (variable)
 - **[sizing](#simple-tokens)** (variable)
 - **[dimension](#simple-tokens)** (variable)
 - **[color & linear-gradient](#simple-tokens)** (variable)
@@ -498,7 +498,7 @@ This will generate an entry in the `components-global.css` file:
 | `underline`    |      `underline`       |
 | `line-through` |     `line-through`     |
 
-#### fontFamily
+#### fontFamily value
 fontFamily may require manual intervention.
 
 | Token                                                                                                                                                  | Generated CSS                                                            |
