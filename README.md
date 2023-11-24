@@ -12,7 +12,7 @@ Design Tokens Studio Tailwind simplifies the process of integrating design token
 - [Installation](#installation)
 - [Usage](#usage)
 - [Generated CSS from token](#generated-css-from-token)
-- [Supported tokens](#supported-tokens)
+- [Supported tokens & Examples](#supported-tokens--examples)
 - [Contributing](#contributing)
 
 ## Compatibility
@@ -60,11 +60,20 @@ There are two methods to utilize Tokens Studio Tailwind in your Tailwind CSS pro
       "value": "3",
       "type": "lineHeights"
     }
+  },
+  "$themes": [],
+  "$metadata": {
+    "tokenSetOrder": [
+      "global",
+      "dark"
+    ]
   }
 }
 ```
 
 **⚠ WARNING**
+> This version utilizes the free version of Tokens Studio. Themes will be extracted from within <span style="color:red;">**$metadata.tokenSetOrder**</span>.
+> 
 > Ensure the JSON design tokens include a theme named 'global', which will be used to generate root CSS.
 
 <br>
@@ -205,7 +214,7 @@ When generating CSS from tokens, consider the following points:
 | Theme token         | <pre>{<br/> "dark": {<br/>  "TOKEN_NAME": {<br/>   "value": "TOKEN_VALUE",<br/>   "type": "TOKEN_TYPE"<br/>  }<br/> }<br/>}</pre>                                                     | <pre>@layer base {<br/> .dark {<br/>  --token-name: TOKEN_VALUE !important;<br/> }<br/>}</pre>                 |
 
 
-## Supported tokens
+## Supported tokens & Examples
 This package provides support for the following:
 - **[fontSizes](#simple-tokens)** (variable)
 - **[letterSpacing](#simple-tokens)** (variable)
