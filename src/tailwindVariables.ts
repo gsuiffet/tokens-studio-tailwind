@@ -57,9 +57,17 @@ export function getTailwindVariables(allProperties: TransformedToken[]) {
         const propertiesForKey = groupedProperties[key];
         if (propertiesForKey) {
           result[key] = propertiesForKey.reduce(
-            (subResult: Record<string, string>, { path }) => {
-              const value = kebabCase(path.join('-'));
-              subResult[`sd-${value}`] = `var(--${value})`;
+            (subResult: Record<string, string>, { path, value, type }) => {
+              const pathValue = kebabCase(path.join('-'));
+              const regexColor = /^(rgb(a)?|hsl(a)?)\(/;
+              const getPath = (match: RegExpMatchArray | null) => {
+                if (type === COLOR && match) {
+                  return `${match[1]}(var(--${pathValue}))`;
+                } else {
+                  return `var(--${pathValue})`;
+                }
+              };
+              subResult[`sd-${pathValue}`] = getPath(value.match(regexColor));
               return subResult;
             },
             {} as Record<string, string>,
