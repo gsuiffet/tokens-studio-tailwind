@@ -14,7 +14,15 @@ export function componentsTemplate({
   const filteredProperties = filter ? allProperties.filter(filter) : allProperties;
   const generatedClasses = filteredProperties.map((property) => {
     const classNames = fn(property) as string[];
-    const prefixedClasses = classNames.map((className) => `${prefixUtility}${className}`).join(' ');
+    const prefixedClasses = classNames
+      .map((className) => {
+        const multipleCls = className.split(' ').filter((cls) => cls);
+        if (multipleCls.length > 1) {
+          return multipleCls.map((cls) => `${prefixUtility}${cls}`).join(' ');
+        }
+        return `${prefixUtility}${className}`;
+      })
+      .join(' ');
     return `  ${prefixSelector}${property.name} {\n    @apply ${prefixedClasses};\n  }\n`;
   });
   return generatedClasses.join('');

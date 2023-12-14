@@ -23,6 +23,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "tsup",
+    "build:sd": "pnpm run build && node dist/index.js -j __mock__/tokensWithBaseAndComponent.json -t global,dark",
     "test": "jest --coverage",
     "lint": "tsc && eslint \"{src,tests}/**/*.ts\" && prettier --check .",
     "version": "changeset version",
