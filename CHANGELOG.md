@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.1.0
+
+### Minor Changes
+
+- e4e6f28: Handle color hls hsla rgb rgba & allow border color variable & fix multiple size on different theme
+
 ## 2.0.2
 
 ### Patch Changes
