@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.1.3
+
+### Patch Changes
+
+- cd42c2e: refactor border
+
 ## 2.1.2
 
 ### Patch Changes
