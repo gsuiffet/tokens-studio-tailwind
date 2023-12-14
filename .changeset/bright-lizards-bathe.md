@@ -1,0 +1,5 @@
+---
+'@gsuiffet/tokens-studio-tailwind': patch
+---
+
+refactor border
