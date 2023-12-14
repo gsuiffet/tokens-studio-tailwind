@@ -46,6 +46,21 @@ function getProperties(allProperties: TransformedToken[]) {
   }, [] as TransformedToken[]);
 }
 
+function getPathValue(path: string[], value: string | undefined, type: string): string {
+  const pathValue = kebabCase(path.join('-'));
+  const regexColor = /^(rgb(a)?|hsl(a)?)\(/;
+
+  const getPath = () => {
+    if (type === COLOR && value && value.match(regexColor)) {
+      return `${value.match(regexColor)![1]}(var(--${pathValue}))`;
+    } else {
+      return `var(--${pathValue})`;
+    }
+  };
+
+  return getPath();
+}
+
 export function getTailwindVariables(allProperties: TransformedToken[]) {
   const properties = getProperties(allProperties);
   const groupedProperties = groupBy(properties, 'type');
@@ -59,15 +74,7 @@ export function getTailwindVariables(allProperties: TransformedToken[]) {
           result[key] = propertiesForKey.reduce(
             (subResult: Record<string, string>, { path, value, type }) => {
               const pathValue = kebabCase(path.join('-'));
-              const regexColor = /^(rgb(a)?|hsl(a)?)\(/;
-              const getPath = (match: RegExpMatchArray | null) => {
-                if (type === COLOR && match) {
-                  return `${match[1]}(var(--${pathValue}))`;
-                } else {
-                  return `var(--${pathValue})`;
-                }
-              };
-              subResult[`sd-${pathValue}`] = getPath(value.match(regexColor));
+              subResult[`sd-${pathValue}`] = getPathValue(path, value, type);
               return subResult;
             },
             {} as Record<string, string>,
