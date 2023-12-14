@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.1.1
+
+### Patch Changes
+
+- 8bfab28: fix generate tailwind variables
+
 ## 2.1.0
 
 ### Minor Changes
