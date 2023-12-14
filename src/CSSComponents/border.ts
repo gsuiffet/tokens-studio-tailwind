@@ -8,7 +8,7 @@ import {
 } from '../types';
 import { getSizeValue } from '../CSSVariables';
 import { VALUE_NOT_ALLOWED } from '../utils';
-import { get } from 'lodash';
+import { get, kebabCase } from 'lodash';
 
 const { SOLID } = TokenBorderStyleValue;
 const { TW_CLS_BORDER } = TailwindClassTypes;
@@ -19,9 +19,11 @@ type Props = TransformedToken | SingleBorderToken;
 function getColor(color: string | undefined, original: DesignToken) {
   const isVariable = new RegExp('^{.*}$');
   if (color) {
-    return get(original, 'value.color') && isVariable.test(original.value.color)
-      ? `sd-${original.value.color.replace(/^\{|}$/g, '')}`
-      : `[${color}]`;
+    if (get(original, 'value.color') && isVariable.test(original.value.color)) {
+      return `sd-${kebabCase(original.value.color.replace(/^\{|}$/g, ''))}`;
+    } else {
+      return `[${color}]`;
+    }
   } else {
     return `[${TW_COLOR_DEFAULT_VALUE}]`;
   }
