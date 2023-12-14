@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.1.2
+
+### Patch Changes
+
+- fb3b4cd: fix border color variable
+
 ## 2.1.1
 
 ### Patch Changes
