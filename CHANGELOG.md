@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.1.4
+
+### Patch Changes
+
+- d37bbaa: small refactor
+
 ## 2.1.3
 
 ### Patch Changes
