@@ -15,6 +15,15 @@
     "type": "git",
     "url": "https://github.com/gsuiffet/tokens-studio-tailwind"
   },
+  "keywords": [
+    "design",
+    "tokens",
+    "design tokens",
+    "tailwind",
+    "tokens studio",
+    "design system",
+    "figma"
+  ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

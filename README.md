@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Design Tokens Studio Tailwind simplifies the process of integrating design tokens from Tokens Studio into Tailwind CSS projects. It ensures consistency in your design system by providing an efficient way to map design tokens to CSS properties.
+Tokens Studio Tailwind simplifies the process of integrating design tokens from Tokens Studio into Tailwind CSS projects. It ensures consistency in your design system by providing an efficient way to map design tokens to CSS properties.
 
 ## Compatibility
 This package is compatible with Tailwind CSS version 3.3.5 and currently supports the free version ^1 of Tokens-studio. For different versions, please verify compatibility or consider updating your Tailwind CSS installation.
