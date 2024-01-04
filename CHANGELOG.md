@@ -1,5 +1,11 @@
 # @gsuiffet/tokens-studio-tailwind
 
+## 2.1.5
+
+### Patch Changes
+
+- 62f578d: add keyword
+
 ## 2.1.4
 
 ### Patch Changes
