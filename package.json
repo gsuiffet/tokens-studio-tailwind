@@ -10,6 +10,7 @@
   "bin": {
     "tokens-studio-tailwind": "./dist/index.js"
   },
+  "homepage": "https://tokens-studio-tailwind-doc.vercel.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/gsuiffet/tokens-studio-tailwind"
